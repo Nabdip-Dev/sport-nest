@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="min-h-screen flex flex-col">
+      <body className="min-h-screen !bg-[#e8eefd] flex flex-col">
 
         <Navbar />
 
