@@ -1,164 +1,329 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { motion } from "framer-motion";
+import CountUp from "react-countup";
+import {
+  ArrowRight,
+  Play,
+  Trophy,
+  Calendar,
+  MapPin,
+  Star,
+} from "lucide-react";
+
+import { useEffect, useState } from "react";
+
+const sportsData = [
+  {
+    image:
+      "https://images.unsplash.com/photo-1517466787929-bc90951d0974?q=80&w=2070&auto=format&fit=crop",
+    title: "Football Turf",
+    price: "₹499",
+    emoji: "⚽",
+  },
+
+  {
+    image:
+      "https://images.unsplash.com/photo-1546519638-68e109498ffc?q=80&w=2070&auto=format&fit=crop",
+    title: "Basketball Court",
+    price: "₹699",
+    emoji: "🏀",
+  },
+
+  {
+    image:
+      "https://images.unsplash.com/photo-1521412644187-c49fa049e84d?q=80&w=2070&auto=format&fit=crop",
+    title: "Swimming Arena",
+    price: "₹899",
+    emoji: "🏊",
+  },
+
+  {
+    image:
+      "https://images.unsplash.com/photo-1517649763962-0c623066013b?q=80&w=2070&auto=format&fit=crop",
+    title: "Tennis Court",
+    price: "₹599",
+    emoji: "🎾",
+  },
+
+  {
+    image:
+      "https://images.unsplash.com/photo-1505250469679-203ad9ced0cb?q=80&w=2070&auto=format&fit=crop",
+    title: "Cricket Ground",
+    price: "₹999",
+    emoji: "🏏",
+  },
+
+  {
+    image:
+      "https://images.unsplash.com/photo-1518611012118-696072aa579a?q=80&w=2070&auto=format&fit=crop",
+    title: "Gym Arena",
+    price: "₹399",
+    emoji: "🏋️",
+  },
+
+  {
+    image:
+      "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?q=80&w=2070&auto=format&fit=crop",
+    title: "Badminton Court",
+    price: "₹549",
+    emoji: "🏸",
+  },
+];
 
 const Banner = () => {
-    return (
-        <section className="relative min-h-screen bg-gradient-to-b from-white to-blue-50 overflow-hidden flex items-center justify-center px-6 lg:px-20">
+  const [current, setCurrent] = useState(0);
 
-            {/* Decorative SVGs */}
-            <motion.svg
-                className="absolute top-0 left-0 w-80 h-80 opacity-30"
-                animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 200, ease: "linear" }}
+  useEffect(() => {
+    const slider = setInterval(() => {
+      setCurrent((prev) =>
+        prev === sportsData.length - 1 ? 0 : prev + 1
+      );
+    }, 3500);
+
+    return () => clearInterval(slider);
+  }, []);
+
+  return (
+    <section className="relative flex items-center overflow-hidden bg-white py-2 sm:py-4 lg:min-h-[78vh]">
+
+      {/* Background */}
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-cyan-50" />
+
+      {/* Glow */}
+      <div className="absolute left-0 top-0 h-[180px] w-[180px] rounded-full bg-blue-200/40 blur-3xl sm:h-[260px] sm:w-[260px]" />
+      <div className="absolute bottom-0 right-0 h-[180px] w-[180px] rounded-full bg-cyan-200/40 blur-3xl sm:h-[260px] sm:w-[260px]" />
+
+      <div className="relative z-10 mx-auto grid max-w-7xl grid-cols-1 items-center gap-8 px-4 py-4 sm:px-5 sm:py-6 lg:grid-cols-2 lg:gap-10 lg:px-8">
+
+        {/* LEFT */}
+        <motion.div
+          initial={{ opacity: 0, x: -40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7 }}
+        >
+
+          {/* Badge */}
+          <motion.div
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white px-3 py-1.5 shadow-md"
+          >
+            <Trophy className="h-3.5 w-3.5 text-blue-600" />
+
+            <span className="text-xs font-semibold text-slate-700">
+              #1 Sports Booking Platform
+            </span>
+          </motion.div>
+
+          {/* Heading */}
+          <h1 className="text-2xl font-black leading-tight text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl">
+            Book Premium
+            <span className="bg-gradient-to-r from-blue-600 via-cyan-500 to-indigo-500 bg-clip-text text-transparent">
+              {" "}
+              Sports Facilities
+            </span>
+            <br />
+            Anytime, Anywhere
+          </h1>
+
+          {/* Description */}
+          <p className="mt-3 max-w-xl text-sm leading-6 text-slate-600 sm:text-sm lg:text-base">
+            Discover premium football turfs, basketball courts,
+            swimming arenas, badminton courts and more with
+            seamless real-time booking.
+          </p>
+
+          {/* Buttons */}
+          <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+
+            <Link
+              href="/facilities"
+              className="group inline-flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-blue-600 to-cyan-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-all duration-300 hover:scale-105"
             >
-                <circle cx="100" cy="100" r="80" fill="url(#grad1)" />
-                <defs>
-                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#6b21a8" />
-                        <stop offset="100%" stopColor="#3b82f6" />
-                    </linearGradient>
-                </defs>
-            </motion.svg>
+              Explore Facilities
 
-            <motion.svg
-                className="absolute bottom-0 right-0 w-96 h-96 opacity-30"
-                animate={{ rotate: -360 }}
-                transition={{ repeat: Infinity, duration: 200, ease: "linear" }}
+              <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+            </Link>
+
+            <button className="inline-flex items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-semibold text-slate-700 shadow-md transition-all duration-300 hover:bg-slate-100 hover:scale-105">
+              <Play className="h-4 w-4" />
+              Watch Demo
+            </button>
+          </div>
+
+          {/* Stats */}
+          <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+              viewport={{ once: true }}
+              whileHover={{ y: -4 }}
+              className="rounded-xl bg-white p-3 shadow-lg flex flex-col items-center justify-center text-center"
             >
-                <circle cx="150" cy="150" r="120" fill="url(#grad2)" />
-                <defs>
-                    <linearGradient id="grad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" stopColor="#ec4899" />
-                        <stop offset="100%" stopColor="#facc15" />
-                    </linearGradient>
-                </defs>
-            </motion.svg>
+              <Calendar className="mb-2 h-6 w-6 text-blue-600" />
 
-            <div className="container mx-auto flex flex-col-reverse lg:flex-row items-center gap-16">
+              <h2 className="text-xl font-black text-slate-900 sm:text-2xl">
+                <CountUp end={500} duration={4} enableScrollSpy />+
+              </h2>
 
-                {/* LEFT SIDE TEXT */}
-                <motion.div
-                    initial={{ opacity: 0, x: -150 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 1.2 }}
-                    className="flex-1"
-                >
-                    <span className="inline-block mb-4 text-sm font-semibold tracking-wider px-4 py-1 rounded-full bg-purple-100 text-purple-600">
-                        Next-Gen Sports Booking
-                    </span>
+              <p className="mt-1 text-xs text-slate-500">
+                Daily Bookings
+              </p>
+            </motion.div>
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+              viewport={{ once: true }}
+              whileHover={{ y: -4 }}
+              className="rounded-xl bg-white p-3 shadow-lg flex flex-col items-center justify-center text-center"
+            >
+              <Trophy className="mb-2 h-6 w-6 text-cyan-600" />
 
-                    <h1 className="text-5xl md:text-6xl font-extrabold mb-6 leading-tight bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-600 to-blue-500">
-                        Book Your <br className="hidden md:block" /> Arena in 3D
-                    </h1>
+              <h2 className="text-xl font-black text-slate-900 sm:text-2xl">
+                <CountUp end={130} duration={4} enableScrollSpy />+
+              </h2>
 
-                    <p className="text-gray-700 mb-8 text-lg max-w-lg">
-                        Football, basketball, tennis courts, swimming pools — all available with instant online reservations. Experience premium interactive booking with 3D effects and live icons.
-                    </p>
+              <p className="mt-1 text-xs text-slate-500">
+                Sports Facilities
+              </p>
+            </motion.div>
 
-                    <div className="flex flex-wrap gap-4">
-                        <motion.button
-                            whileHover={{ scale: 1.07 }}
-                            className="px-6 py-3 bg-gradient-to-r from-purple-600 to-blue-500 text-white font-bold rounded-full shadow-xl transition-transform duration-300"
-                        >
-                            Explore Arenas
-                        </motion.button>
+            <motion.div
+              initial={{ opacity: 0, y: 40 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9 }}
+              viewport={{ once: true }}
+              whileHover={{ y: -4 }}
+              className="rounded-xl bg-white p-3 shadow-lg text-center item-center justify-center"
+            >
+              <div className="mb-2 flex justify-center">
+                <MapPin className="h-6 w-6 text-indigo-600" />
+              </div>
 
-                        <motion.button
-                            whileHover={{ scale: 1.07, backgroundColor: "#f0f9ff" }}
-                            className="px-6 py-3 border border-purple-600 text-purple-600 font-semibold rounded-full transition-colors duration-300"
-                        >
-                            How It Works
-                        </motion.button>
-                    </div>
+              <h2 className="text-xl font-black text-slate-900 sm:text-2xl">
+                <CountUp end={24} duration={4} enableScrollSpy />/7
+              </h2>
 
-                    {/* Stats */}
-                    <div className="flex flex-wrap gap-12 mt-12">
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8 }}
-                        >
-                            <h2 className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-600 to-blue-500">
-                                35K+
-                            </h2>
-                            <p className="text-gray-500 text-sm mt-1">Bookings Completed</p>
-                        </motion.div>
+              <p className="mt-1 text-xs text-slate-500">
+                Instant Booking
+              </p>
+            </motion.div>
+          </div>
+        </motion.div>
 
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                        >
-                            <h2 className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-green-400 to-blue-500">
-                                250+
-                            </h2>
-                            <p className="text-gray-500 text-sm mt-1">Arenas Listed</p>
-                        </motion.div>
+        {/* RIGHT */}
+        <motion.div
+          initial={{ opacity: 0, x: 40 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.7 }}
+          className="relative mt-4 lg:mt-0"
+        >
 
-                        <motion.div
-                            initial={{ opacity: 0, y: 30 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.8, delay: 0.4 }}
-                        >
-                            <h2 className="text-4xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-red-500">
-                                99%
-                            </h2>
-                            <p className="text-gray-500 text-sm mt-1">Happy Customers</p>
-                        </motion.div>
-                    </div>
-                </motion.div>
+          {/* Main Slider */}
+          <div className="relative h-[260px] overflow-hidden rounded-[24px] bg-white p-2 shadow-2xl sm:h-[380px] lg:h-[480px]">
 
-                {/* RIGHT SIDE IMAGE */}
-                <motion.div
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 1.2 }}
-                    className="flex-1 relative flex justify-center items-center"
-                >
-                    <motion.div
-                        whileHover={{ y: -15, scale: 1.03, rotate: 2 }}
-                        className="relative z-10"
-                    >
-                       <Image
-  src="https://images.unsplash.com/photo-1599058917213-9f7c1f48f6bb?auto=format&fit=crop&w=500&q=80"
-  alt="Sports arena"
-  width={500}
-  height={500}
-  className="drop-shadow-2xl"
-/>
-                    </motion.div>
+            {sportsData.map((sport, index) => (
+              <motion.img
+                key={index}
+                src={sport.image}
+                alt={sport.title}
+                initial={false}
+                animate={{
+                  opacity: current === index ? 1 : 0,
+                  scale: current === index ? 1 : 1.05,
+                }}
+                transition={{
+                  opacity: {
+                    duration: 1.2,
+                    ease: "easeInOut",
+                  },
+                  scale: {
+                    duration: 5,
+                    ease: "linear",
+                  },
+                }}
+                className="absolute inset-0 h-full w-full rounded-[20px] object-cover"
+              />
+            ))}
+          </div>
 
-                    {/* Floating 3D Booking Card with Icons */}
-                    <motion.div
-                        initial={{ y: 60, opacity: 0 }}
-                        animate={{ y: 0, opacity: 1 }}
-                        transition={{ duration: 1, delay: 0.5 }}
-                        whileHover={{ scale: 1.07, rotate: -1 }}
-                        className="absolute bottom-12 left-1/2 transform -translate-x-1/2 bg-white rounded-3xl p-6 shadow-2xl w-64 border border-gray-200 flex flex-col items-center gap-3"
-                    >
-                        {/* SVG Icon */}
-                        <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8 text-blue-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                        </svg>
+          {/* Sport Card */}
+          <div className="absolute left-2 top-3 rounded-xl bg-white p-2.5 shadow-xl">
 
-                        <h3 className="text-lg font-bold text-gradient bg-clip-text text-transparent bg-gradient-to-r from-pink-500 via-purple-600 to-blue-500">
-                            Premium Arena
-                        </h3>
-                        <p className="text-gray-500 text-sm">Starting from ৳850/hour</p>
-                        <motion.button
-                            whileHover={{ scale: 1.07 }}
-                            className="mt-2 w-full py-2 bg-gradient-to-r from-purple-600 to-blue-500 text-white font-bold rounded-xl shadow-lg transition-transform duration-300"
-                        >
-                            Reserve Now
-                        </motion.button>
-                    </motion.div>
-                </motion.div>
+            <div className="flex items-center gap-2">
+
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 text-lg sm:h-10 sm:w-10 sm:text-xl">
+                {sportsData[current].emoji}
+              </div>
+
+              <div>
+                <h3 className="text-xs font-bold text-slate-900 sm:text-sm">
+                  {sportsData[current].title}
+                </h3>
+
+                <p className="text-[10px] text-slate-500 sm:text-xs">
+                  Available Today
+                </p>
+              </div>
             </div>
-        </section>
-    );
+          </div>
+
+          {/* Price Card */}
+          <div className="absolute bottom-3 right-2 rounded-xl bg-white p-3 shadow-xl">
+
+            <p className="text-[10px] text-slate-500 sm:text-xs">
+              Starting From
+            </p>
+
+            <h2 className="mt-1 text-xl font-black text-blue-600 sm:text-2xl">
+              {sportsData[current].price}
+            </h2>
+
+            <p className="mt-1 text-[10px] text-slate-500 sm:text-xs">
+              Per Hour Booking
+            </p>
+          </div>
+
+          {/* Rating Card */}
+          <motion.div
+            animate={{ y: [0, -5, 0] }}
+            transition={{
+              repeat: Infinity,
+              duration: 4,
+            }}
+            className="absolute bottom-20 left-2 rounded-xl bg-white p-2.5 shadow-xl"
+          >
+            <div className="flex items-center gap-2">
+
+              <div className="flex text-yellow-400">
+                <Star className="h-3.5 w-3.5 fill-yellow-400" />
+                <Star className="h-3.5 w-3.5 fill-yellow-400" />
+                <Star className="h-3.5 w-3.5 fill-yellow-400" />
+                <Star className="h-3.5 w-3.5 fill-yellow-400" />
+                <Star className="h-3.5 w-3.5 fill-yellow-400" />
+              </div>
+
+              <div>
+                <h3 className="text-xs font-bold text-slate-900 sm:text-sm">
+                  4.9 Rating
+                </h3>
+
+                <p className="text-[10px] text-slate-500 sm:text-xs">
+                  Trusted by Athletes
+                </p>
+              </div>
+            </div>
+          </motion.div>
+        </motion.div>
+      </div>
+    </section>
+  );
 };
 
 export default Banner;
