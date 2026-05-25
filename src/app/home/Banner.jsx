@@ -155,7 +155,7 @@ const Banner = () => {
           </div>
 
           {/* Stats */}
-          <div className="mt-8 grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="mt-8 grid grid-cols-3 gap-3 ">
 
             <motion.div
               initial={{ opacity: 0, y: 40 }}
