@@ -30,8 +30,8 @@ const Navbar = () => {
           <ul className="menu dropdown-content mt-3 p-2 shadow bg-white rounded-box w-40 z-50">
             <li><NavLink href="/">Home</NavLink></li>
             <li><NavLink href="/facilities">Facilities</NavLink></li>
-            <li><NavLink href="/my-booking">My Bookings</NavLink></li>
-            <li><NavLink href="/add-facilities">Add Facility</NavLink></li>
+            <li><NavLink href="/my-bookings">My Bookings</NavLink></li>
+            <li><NavLink href="/add-facility">Add Facility</NavLink></li>
             <li><NavLink href="/manage-facilities">Manage Facilities</NavLink></li>
             {user && <li><NavLink href="/my-profile">My Profile</NavLink></li>}
           </ul>
