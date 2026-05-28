@@ -1,8 +1,8 @@
 
 
+import DeleteModal from "@/components/DeleteModal";
+import EditModal from "@/components/EditModal";
 import FacilitiesDetailsClient from "@/components/FacilitiesDetailsClient";
-import { motion } from "framer-motion";
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock, FaTag } from "react-icons/fa";
 
 const FacilitiesDetailsPage = async ({ params }) => {
     const { id } = await params
@@ -12,7 +12,20 @@ const FacilitiesDetailsPage = async ({ params }) => {
     const { _id, name, sport, price, open, close, description, image, location, email, phone, phoneCode } = facility
 
 
-    return <FacilitiesDetailsClient facility={facility} />;
+    return (
+        <div className="flex-col pt-6 pb-10 bg-gradient-to-br from-gray-50 via-white to-blue-50 flex items-center justify-center px-3 text-black">
+
+            <div className="w-full max-w-5xl">
+                <div className="pb-6 flex  gap-4 justify-end items-end">
+                    <button> <EditModal facility={facility} /> </button>
+                    <button> <DeleteModal facility={facility} /> </button>
+                </div>
+            </div>
+
+            <FacilitiesDetailsClient facility={facility} />
+
+        </div>
+    );
 
 
 };
