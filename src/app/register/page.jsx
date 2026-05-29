@@ -1,5 +1,8 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
+import toast from "react-hot-toast";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -10,13 +13,48 @@ export default function Register() {
 
   const {
     register,
-    handleSubmit,
+    handleSubmit: rhfSubmit,
     formState: { errors },
   } = useForm();
 
-  const handelfun = (data) => {
-    console.log(data);
+  const router = useRouter();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.currentTarget);
+    const user = Object.fromEntries(formData.entries());
+
+    const { data, error } = await authClient.signUp.email({
+      email: user.email,
+      password: user.password,
+      name: user.name,
+      image: user.photo,
+    });
+
+    if (error) {
+      toast.error(error.message || "Signup Failed");
+      return;
+    }
+
+    toast.success("Account Created Successfully!");
+
+    setTimeout(() => {
+      router.push("/");
+    }, 1500);
   };
+
+
+  const handleGoogleSing = async () => {
+    try {
+      await authClient.signIn.social({
+        provider: "google",
+      });
+    } catch (err) {
+      toast.error("Something went wrong!");
+    }
+  };
+
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#f5fbff] via-white to-[#eef7ff] px-4 py-6">
@@ -42,7 +80,7 @@ export default function Register() {
 
         {/* FORM */}
         <form
-          onSubmit={handleSubmit(handelfun)}
+          onSubmit={handleSubmit}
           className="space-y-4"
         >
 
@@ -175,7 +213,7 @@ export default function Register() {
         </div>
 
         {/* GOOGLE BUTTON */}
-        <button
+        <button onClick={handleGoogleSing}
           className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-700 transition-all duration-300 hover:border-cyan-400 hover:bg-cyan-50"
         >
 

@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import NavLink from "./NavLink";
 import { usePathname } from "next/navigation";
@@ -9,11 +10,16 @@ import { MdOutlineOpenInBrowser, MdWavingHand } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
 
 const Navbar = () => {
-  // backend/auth related code removed
-  const user = null;
-  const isPending = false;
+  const { data: session, isPending } = authClient.useSession();
+  const user = session?.user;
 
   const pathname = usePathname();
+
+  const handleLogout = async () => {
+    await authClient.signOut();
+    window.location.reload();
+  };
+
 
   return (
     <div className="navbar bg-white shadow-md px-6 sticky top-0 z-50">
@@ -54,7 +60,7 @@ const Navbar = () => {
           <li><NavLink href="/facilities">Facilities</NavLink></li>
           <li><NavLink href="/my-bookings">My Bookings</NavLink></li>
           <li><NavLink href="/add-facility">Add Facility</NavLink></li>
-           <li><NavLink href="/manage-facilities">Manage Facilities</NavLink></li>
+          <li><NavLink href="/manage-facilities">Manage Facilities</NavLink></li>
           {user && (
             <li>
               <NavLink href="/my-profile">
@@ -68,38 +74,29 @@ const Navbar = () => {
 
       {/* Right - Auth */}
       <div className="navbar-end gap-2">
+
         {isPending ? (
-          <span className="loading loading-bars loading-sm text-orange-500"></span>
+          <span className="loading loading-bars loading-sm text-blue-500"></span>
+
         ) : user ? (
           <>
-            <div className="px-4">
-              <h1 className="hidden md:flex flex-col items-center gap-1">
-                <span className="flex items-center text-[#300f00] font-semibold">
-                  Hello
-                  <MdWavingHand />
-                </span>
-
-                <span className="font-bold text-[#ff5e00]">
-                  “User”
-                </span>
-              </h1>
-            </div>
-
             <img
-              src="https://i.ibb.co/4pDNDk1/avatar.png"
+              src={user?.image || "https://i.ibb.co/4pDNDk1/avatar.png"}
               alt="user"
-              className="z-10 w-8 h-8 rounded-full -mr-11 object-cover"
+              className="z-10 w-7 h-7 rounded-full -mr-10 object-cover"
             />
 
             <button
-              className="flex items-center gap-1 font-semibold relative pl-13 pr-4 py-1 text-[#331300b6] hover:text-white text-lg border-1 border-[#331300b6] hover:border-transparent hover:bg-gradient-to-r from-[#fb5c00] to-[#ff7a1a] rounded-full overflow-hidden
-              before:content-[''] before:absolute before:top-1/2 before:left-0
-              before:w-11 before:h-11 before:bg-white
-              before:rounded-full before:-translate-x-1/12 before:-translate-y-1/2 cursor-pointer"
+              onClick={handleLogout}
+              className="flex items-center gap-1 font-semibold relative pl-9 pr-4 py-1 text-[#000000fa]
+        hover:text-white text-lg border border-[#0e0500]
+        hover:bg-gradient-to-r from-[#4300fb] to-[#1a3cffe7]
+        rounded-full cursor-pointer text-[16px]"
             >
               <IoIosLogOut />
               logout
             </button>
+
           </>
         ) : (
           <div className="flex w-[160px] h-[35px]">
