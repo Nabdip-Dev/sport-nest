@@ -1,190 +1,174 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
-import toast from "react-hot-toast";
+import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { toast, Toaster } from "react-hot-toast";
 
 export default function Login() {
-
   const [show, setShow] = useState(false);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm();
 
-    const formData = new FormData(e.currentTarget);
-    const user = Object.fromEntries(formData.entries());
+  const handelfun = async (data) => {
+    setLoading(true);
 
-    const { data, error } = await authClient.signIn.email({
-      email: user.email,
-      password: user.password,
-    });
+    try {
+      const { data: res, error } = await authClient.signIn.email({
+        email: data.email,
+        password: data.password,
+        rememberMe: true,
+        callbackURL: "/",
+      });
 
-    if (error) {
-      toast.error(error.message || "Login Failed");
-      return;
-    }
+      if (error) {
+        toast.error(error?.message || "Login failed");
+        return;
+      }
 
-    toast.success("Login Successfully!");
+      // 🔥 SUCCESS TOAST
+      toast.success("Login successful 🎉", {
+        duration: 3000,
+      });
 
-    setTimeout(() => {
+      // ⏱ wait until toast finishes
+      await new Promise((r) => setTimeout(r, 3000));
+
+      // 🚀 redirect
       router.push("/");
-    }, 1500);
+
+    } catch (err) {
+      toast.error("Something went wrong");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handleGoogleSing = async () => {
+  const handelgooglesin = async () => {
     try {
+      toast.loading("Redirecting to Google...", { id: "google" });
+
       await authClient.signIn.social({
         provider: "google",
       });
+
+      toast.success("Google login started", { id: "google" });
     } catch (err) {
-      toast.error("Something went wrong!");
+      toast.error("Google login failed", { id: "google" });
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-sky-50 via-white to-cyan-50 px-4 py-6">
+    <div className="min-h-screen flex items-center justify-center px-6 md:py-15">
 
-      <div className="w-full max-w-sm rounded-2xl bg-gradient-to-r from-cyan-500 via-blue-500 to-sky-500 p-[1px] shadow-xl">
+      {/* GLOBAL TOASTER */}
+      <Toaster position="top-right" />
 
-        <div className="rounded-2xl bg-white/90 p-5 backdrop-blur-2xl">
+      <div className="w-full max-w-md p-[1px] rounded-2xl bg-gradient-to-l from-[#0022ff] via-purple-700 to-[#00d5ff]">
 
-          {/* TOP */}
-          <div className="text-center">
+        <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-8 shadow-2xl">
 
-            <div className="inline-flex rounded-full bg-cyan-100 px-3 py-1 text-xs font-semibold text-cyan-700">
-              Welcome Back
-            </div>
+          <h2 className="text-3xl font-bold text-center mb-2 text-gray-800">
+            Welcome Back
+          </h2>
 
-            <h2 className="mt-3 text-2xl font-black text-slate-900">
-              Login Account
-            </h2>
+          <p className="text-center text-gray-500 mb-6">
+            Login to continue
+          </p>
 
-            <p className="mt-2 text-xs text-slate-500">
-              Login to continue your sports journey
-            </p>
-
-          </div>
-
-          {/* FORM */}
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+          <form onSubmit={handleSubmit(handelfun)} className="space-y-4">
 
             {/* EMAIL */}
-            <div>
-
-              <label className="mb-1 block text-xs font-semibold text-slate-700">
-                Email Address
-              </label>
-
-              <input
-                name="email"
-                type="email"
-                placeholder="Enter your email"
-                className="h-[45px] w-full rounded-xl border border-slate-200 bg-white px-3 text-xs text-slate-800 outline-none transition-all duration-300 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-100"
-              />
-
-            </div>
+            <input
+              type="email"
+              placeholder="Email Address"
+              {...register("email", {
+                required: "Email is required",
+              })}
+              className="input bg-white border border-[#b8b8b89b] text-[#494949] input-bordered w-full rounded-xl focus:outline-none focus:ring-1 focus:ring-[#331300b6]"
+            />
+            {errors.email && (
+              <p className="text-red-600 text-sm">
+                {errors.email.message}
+              </p>
+            )}
 
             {/* PASSWORD */}
-            <div>
+            <div className="relative">
 
-              <label className="mb-1 block text-xs font-semibold text-slate-700">
-                Password
-              </label>
+              <input
+                type={show ? "text" : "password"}
+                placeholder="Password"
+                {...register("password", {
+                  required: "Password is required",
+                })}
+                className="input bg-white border border-[#b8b8b89b] text-[#494949] input-bordered w-full rounded-xl pr-10 focus:outline-none focus:ring-1 focus:ring-[#331300b6]"
+              />
 
-              <div className="relative">
-
-                <input
-                  name="password"
-                  type={show ? "text" : "password"}
-                  placeholder="Enter your password"
-                  className="h-[45px] w-full rounded-xl border border-slate-200 bg-white px-3 pr-10 text-xs text-slate-800 outline-none transition-all duration-300 focus:border-cyan-500 focus:ring-2 focus:ring-cyan-100"
-                />
-
-                <button
-                  type="button"
-                  onClick={() => setShow(!show)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-sm"
-                >
-                  {show ? "👁️" : "🙈"}
-                </button>
-
-              </div>
-
-            </div>
-
-            {/* FORGOT */}
-            <div className="flex justify-end">
-
-              <button
-                type="button"
-                className="text-xs font-semibold text-cyan-600 hover:text-cyan-700"
+              <span
+                onClick={() => setShow(!show)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer select-none"
               >
-                Forgot Password?
-              </button>
-
-            </div>
-
-            {/* LOGIN BUTTON */}
-            <button
-              type="submit"
-              className="w-full rounded-xl bg-gradient-to-r from-cyan-500 via-blue-500 to-sky-500 py-3 text-xs font-bold tracking-wide text-white shadow-md transition-all duration-300 hover:scale-[1.02]"
-            >
-              Login Account
-            </button>
-
-          </form>
-
-          {/* DIVIDER */}
-          <div className="relative my-5">
-
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-slate-200"></div>
-            </div>
-
-            <div className="relative flex justify-center">
-
-              <span className="bg-white px-3 text-xs text-slate-400">
-                OR
+                {show ? "👁️" : "🙈"}
               </span>
 
             </div>
 
+            {errors.password && (
+              <p className="text-red-600 text-sm">
+                {errors.password.message}
+              </p>
+            )}
+
+            {/* BUTTON */}
+            <button
+              disabled={loading}
+              className="w-full py-2 rounded-xl text-white font-semibold bg-gradient-to-l from-[#0b003c] to-[#1f02ff] hover:scale-105 transition duration-300 shadow-md disabled:opacity-50"
+            >
+              {loading ? "Logging in..." : "Login"}
+            </button>
+
+          </form>
+
+          {/* OR */}
+          <div className="flex items-center gap-4 my-6">
+            <hr className="flex-1 border-t border-gray-400/30 " />
+            <span className="text-gray-400 font-medium">OR</span>
+            <hr className="flex-1 border-t border-gray-400/30 " />
           </div>
 
           {/* GOOGLE */}
-          <button onClick={handleGoogleSing}
-            className="flex h-[45px] w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-700 transition-all duration-300 hover:border-cyan-400 hover:bg-cyan-50"
+          <button
+            onClick={handelgooglesin}
+            className="btn w-full flex items-center gap-3 rounded-xl text-black bg-white border border-[#b8b8b89b] hover:border-[#0015ff] hover:bg-[#b8b0ff73] transition "
           >
-
             <img
               src="https://cdn-icons-png.flaticon.com/512/300/300221.png"
+              className="w-5"
               alt="google"
-              className="h-4 w-4"
             />
-
             Continue with Google
-
           </button>
 
           {/* REGISTER */}
-          <p className="mt-5 text-center text-xs text-slate-500">
-
-            Don&apos;t have an account?{" "}
-
-            <Link
-              href="/register"
-              className="font-bold text-cyan-600 hover:text-cyan-700"
-            >
+          <p className="text-center mt-6 text-sm text-gray-600">
+            Don’t have an account?{" "}
+            <Link href="/register" className="text-blue-500 font-semibold hover:underline">
               Register
             </Link>
-
           </p>
 
         </div>
       </div>
+
     </div>
   );
 }

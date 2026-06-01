@@ -1,247 +1,191 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
-import toast from "react-hot-toast";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
+import { toast, Toaster } from "react-hot-toast";
 
 export default function Register() {
-
   const [show, setShow] = useState(false);
+  const router = useRouter();
 
   const {
     register,
-    handleSubmit: rhfSubmit,
+    handleSubmit,
     formState: { errors },
   } = useForm();
 
-  const router = useRouter();
+  const handelfun = async (data) => {
+    const { email, name, photo, password } = data;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    try {
+      const { data: res, error } = await authClient.signUp.email({
+        name,
+        email,
+        password,
+        image: photo,
+        callbackURL: "/",
+      });
 
-    const formData = new FormData(e.currentTarget);
-    const user = Object.fromEntries(formData.entries());
+      if (error) {
+        toast.error(error?.message || "Something went wrong");
+        return;
+      }
 
-    const { data, error } = await authClient.signUp.email({
-      email: user.email,
-      password: user.password,
-      name: user.name,
-      image: user.photo,
-    });
+      toast.success("Registration Successful 🎉");
 
-    if (error) {
-      toast.error(error.message || "Signup Failed");
-      return;
+      if (res) {
+        await authClient.signOut();
+        router.push("/login");
+      }
+    } catch (err) {
+      toast.error("Server error occurred");
     }
-
-    toast.success("Account Created Successfully!");
-
-    setTimeout(() => {
-      router.push("/");
-    }, 1500);
   };
 
-
-  const handleGoogleSing = async () => {
+  const handelgooglesin = async () => {
     try {
+      toast.loading("Redirecting to Google...", { id: "google" });
+
       await authClient.signIn.social({
         provider: "google",
       });
+
+      toast.success("Google login started", { id: "google" });
     } catch (err) {
-      toast.error("Something went wrong!");
+      toast.error("Google login failed", { id: "google" });
+      console.log(err);
     }
   };
 
-
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-[#f5fbff] via-white to-[#eef7ff] px-4 py-6">
+    <div className="min-h-screen flex items-center justify-center px-6 -mt-5 md:py-15">
 
-      <div className="w-full max-w-2xl rounded-2xl border border-cyan-100 bg-white p-5 shadow-[0_10px_40px_rgba(0,0,0,0.08)]">
+      {/* TOASTER */}
+      <Toaster position="top-right" />
 
-        {/* HEADING */}
-        <div className="mb-6 text-center">
+      <div className="w-full max-w-md p-[1px] rounded-2xl bg-gradient-to-r from-[#0022ff] via-purple-700 to-[#00d5ff]">
 
-          <div className="mb-3 inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-[10px] font-bold tracking-wide text-cyan-700">
-            SPORTNEST REGISTER
-          </div>
+        <div className="bg-white/90 backdrop-blur-xl rounded-2xl p-8 shadow-2xl">
 
-          <h2 className="text-2xl font-black text-slate-900">
+          <h2 className="text-3xl font-bold text-center mb-1 text-gray-800">
             Create Account
           </h2>
 
-          <p className="mt-2 text-xs text-slate-500">
-            Join SportNest and start booking premium sports facilities.
+          <p className="text-center text-gray-500 mb-5">
+            Join the community
+          </p>
+
+          <form onSubmit={handleSubmit(handelfun)} className="space-y-3">
+
+            {/* NAME */}
+            <input
+              type="text"
+              placeholder="Full Name"
+              {...register("name", {
+                required: "Name is required",
+              })}
+              className="input bg-white border border-[#b8b8b89b] text-[#494949] input-bordered w-full rounded-xl focus:outline-none focus:ring-1 focus:ring-[#331300b6]"
+            />
+            {errors.name && (
+              <p className="text-red-600 text-sm">
+                {errors.name.message}
+              </p>
+            )}
+
+            {/* EMAIL */}
+            <input
+              type="email"
+              placeholder="Email Address"
+              {...register("email", {
+                required: "Email is required",
+              })}
+              className="input bg-white border border-[#b8b8b89b] text-[#494949] input-bordered w-full rounded-xl focus:outline-none focus:ring-1 focus:ring-[#331300b6]"
+            />
+            {errors.email && (
+              <p className="text-red-600 text-sm">
+                {errors.email.message}
+              </p>
+            )}
+
+            {/* PHOTO */}
+            <input
+              type="text"
+              placeholder="Photo URL"
+              {...register("photo")}
+              className="input bg-white border border-[#b8b8b89b] text-[#494949] input-bordered w-full rounded-xl focus:outline-none focus:ring-1 focus:ring-[#331300b6]"
+            />
+
+            {/* PASSWORD */}
+            <div className="relative">
+
+              <input
+                type={show ? "text" : "password"}
+                placeholder="Password"
+                {...register("password", {
+                  required: "Password is required",
+                })}
+                className="input bg-white border border-[#b8b8b89b] text-[#494949] input-bordered w-full rounded-xl pr-10 focus:outline-none focus:ring-1 focus:ring-[#331300b6]"
+              />
+
+              <span
+                onClick={() => setShow(!show)}
+                className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer select-none"
+              >
+                {show ? "👁️" : "🙈"}
+              </span>
+
+            </div>
+
+            {errors.password && (
+              <p className="text-red-600 text-sm">
+                {errors.password.message}
+              </p>
+            )}
+
+            {/* SUBMIT */}
+            <button className="w-full py-2 rounded-xl text-white font-semibold bg-gradient-to-r from-[#0b003c] to-[#1f02ff] hover:scale-105 transition duration-300 shadow-md">
+              Register
+            </button>
+
+          </form>
+
+          {/* OR */}
+          <div className="flex items-center gap-4 my-4">
+            <hr className="flex-1 border-t border-gray-400/30 " />
+            <span className="text-gray-400 font-medium">OR</span>
+            <hr className="flex-1 border-t border-gray-400/30 " />
+          </div>
+
+          {/* GOOGLE */}
+          <button
+            onClick={handelgooglesin}
+            className="btn w-full flex items-center gap-3 rounded-xl text-black bg-white border border-[#b8b8b89b] hover:border-[#0015ff] hover:bg-[#b8b0ff73] transition"
+          >
+            <img
+              src="https://cdn-icons-png.flaticon.com/512/300/300221.png"
+              className="w-5"
+              alt="google"
+            />
+            Continue with Google
+          </button>
+
+          {/* LOGIN LINK */}
+          <p className="text-center mt-6 text-sm text-gray-600">
+            Already have an account?{" "}
+            <Link
+              href="/login"
+              className="text-blue-500 font-semibold hover:underline"
+            >
+              Login
+            </Link>
           </p>
 
         </div>
-
-        {/* FORM */}
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-4"
-        >
-
-          {/* GRID */}
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-
-            {/* NAME */}
-            <div>
-
-              <label className="mb-1 block text-xs font-bold text-slate-700">
-                Full Name
-              </label>
-
-              <input
-                type="text"
-                placeholder="Enter your full name"
-                {...register("name", {
-                  required: "Name is required",
-                })}
-                className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-xs text-slate-800 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-cyan-500 focus:shadow-[0_0_0_3px_rgba(34,211,238,0.15)]"
-              />
-
-              {errors.name && (
-                <p className="mt-1 text-xs text-red-500">
-                  {errors.name.message}
-                </p>
-              )}
-
-            </div>
-
-            {/* EMAIL */}
-            <div>
-
-              <label className="mb-1 block text-xs font-bold text-slate-700">
-                Email Address
-              </label>
-
-              <input
-                type="email"
-                placeholder="Enter your email"
-                {...register("email", {
-                  required: "Email is required",
-                })}
-                className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-xs text-slate-800 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-cyan-500 focus:shadow-[0_0_0_3px_rgba(34,211,238,0.15)]"
-              />
-
-              {errors.email && (
-                <p className="mt-1 text-xs text-red-500">
-                  {errors.email.message}
-                </p>
-              )}
-
-            </div>
-
-            {/* PHOTO URL */}
-            <div>
-
-              <label className="mb-1 block text-xs font-bold text-slate-700">
-                Photo URL
-              </label>
-
-              <input
-                type="text"
-                placeholder="Enter your photo url"
-                {...register("photo")}
-                className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 text-xs text-slate-800 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-cyan-500 focus:shadow-[0_0_0_3px_rgba(34,211,238,0.15)]"
-              />
-
-            </div>
-
-            {/* PASSWORD */}
-            <div>
-
-              <label className="mb-1 block text-xs font-bold text-slate-700">
-                Password
-              </label>
-
-              <div className="relative">
-
-                <input
-                  type={show ? "text" : "password"}
-                  placeholder="Enter your password"
-                  {...register("password", {
-                    required: "Password is required",
-                  })}
-                  className="h-11 w-full rounded-xl border border-slate-200 bg-white px-3 pr-10 text-xs text-slate-800 outline-none transition-all duration-300 placeholder:text-slate-400 focus:border-cyan-500 focus:shadow-[0_0_0_3px_rgba(34,211,238,0.15)]"
-                />
-
-                <button
-                  type="button"
-                  onClick={() => setShow(!show)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-sm"
-                >
-                  {show ? "👁️" : "🙈"}
-                </button>
-
-              </div>
-
-              {errors.password && (
-                <p className="mt-1 text-xs text-red-500">
-                  {errors.password.message}
-                </p>
-              )}
-
-            </div>
-
-          </div>
-
-          {/* REGISTER BUTTON */}
-          <button
-            type="submit"
-            className="h-11 w-full rounded-xl bg-gradient-to-r from-cyan-500 via-blue-500 to-sky-500 text-xs font-bold tracking-wide text-white shadow-md transition-all duration-300 hover:scale-[1.02]"
-          >
-            Create Account
-          </button>
-
-        </form>
-
-        {/* DIVIDER */}
-        <div className="my-5 flex items-center gap-2">
-
-          <div className="h-[1px] w-full bg-slate-200" />
-
-          <span className="text-xs font-semibold text-slate-400">
-            OR
-          </span>
-
-          <div className="h-[1px] w-full bg-slate-200" />
-
-        </div>
-
-        {/* GOOGLE BUTTON */}
-        <button onClick={handleGoogleSing}
-          className="flex h-11 w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-700 transition-all duration-300 hover:border-cyan-400 hover:bg-cyan-50"
-        >
-
-          <img
-            src="https://cdn-icons-png.flaticon.com/512/300/300221.png"
-            alt="google"
-            className="h-4 w-4"
-          />
-
-          Continue with Google
-
-        </button>
-
-        {/* LOGIN LINK */}
-        <p className="mt-6 text-center text-xs text-slate-500">
-
-          Already have an account?{" "}
-
-          <Link
-            href="/login"
-            className="font-bold text-cyan-600 hover:underline"
-          >
-            Login
-          </Link>
-
-        </p>
-
       </div>
+
     </div>
   );
 }

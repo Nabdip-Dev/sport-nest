@@ -17,8 +17,8 @@ const FacilitiesDetailsPage = async ({ params }) => {
 
             <div className="w-full max-w-5xl">
                 <div className="pb-6 flex  gap-4 justify-end items-end">
-                    <button> <EditModal facility={facility} /> </button>
-                    <button> <DeleteModal facility={facility} /> </button>
+                    <span> <EditModal facility={facility} /> </span>
+                    <span> <DeleteModal facility={facility} /> </span>
                 </div>
             </div>
 
