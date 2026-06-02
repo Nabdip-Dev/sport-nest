@@ -1,5 +1,4 @@
 
-
 import DeleteModal from "@/components/DeleteModal";
 import EditModal from "@/components/EditModal";
 import FacilitiesDetailsClient from "@/components/FacilitiesDetailsClient";

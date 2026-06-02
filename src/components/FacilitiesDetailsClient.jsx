@@ -10,6 +10,7 @@ import {
   FaStar,
   FaMoneyBillWave,
 } from "react-icons/fa";
+import BookingCard from "./BookingCard";
 
 export default function FacilitiesDetailsClient({ facility }) {
   const {
@@ -118,36 +119,7 @@ export default function FacilitiesDetailsClient({ facility }) {
 
           </div>
 
-          {/* PRICE */}
-          <motion.div
-            whileHover={{
-              scale: 1.01,
-              boxShadow: "0 8px 20px rgba(59,130,246,0.15)",
-            }}
-            className="flex items-center justify-between bg-gradient-to-r from-blue-50 to-white border border-blue-100 rounded-xl p-4"
-          >
-            <div>
-              <p className="text-[11px] text-gray-500">Price per session</p>
-              <p className="text-xl font-bold text-gray-900">
-                <span className="text-blue-600">${price}</span>
-              </p>
-            </div>
-
-            <FaMoneyBillWave className="text-3xl text-blue-500" />
-          </motion.div>
-
-          {/* BUTTON */}
-          <motion.button
-            whileHover={{
-              scale: 1.03,
-              boxShadow: "0 8px 20px rgba(37,99,235,0.3)",
-            }}
-            whileTap={{ scale: 0.96 }}
-            className="w-full py-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 text-white text-sm font-semibold relative overflow-hidden group"
-          >
-            <span className="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition duration-700" />
-            <span className="relative">Book Now</span>
-          </motion.button>
+          <BookingCard facility={facility} />
 
         </div>
       </motion.div>
@@ -171,7 +143,7 @@ function Info({ icon, label, value }) {
       </div>
 
       <div className="min-w-0">
-        <p className="text-[10px] text-gray-400 uppercase">{label}</p>
+        <p className="text-[10px] text-gray-700 uppercase">{label}</p>
         <p className="text-xs text-gray-800 font-medium mt-1 break-words">
           {value}
         </p>
