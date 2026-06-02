@@ -43,18 +43,18 @@ const FacilitiesClient = ({ facilities }) => {
 
         {/* HEADER (SAME) */}
         <div className="text-center mb-6">
-          <h1 className="text-4xl md:text-6xl font-black text-slate-800 mt-5 leading-tight">
+          <h1 className="text-3xl md:text-3xl font-black text-slate-800 mt-3 leading-tight">
             Explore Sports Arenas
           </h1>
 
-          <p className="text-slate-500 mt-5 max-w-2xl mx-auto text-lg">
+          <p className="text-slate-500 mt-3 max-w-2xl mx-auto text-[16px]">
             Book premium football turfs, cricket grounds and indoor courts
             with an easy and seamless experience.
           </p>
         </div>
 
         {/* FILTER BAR (100% SAME DESIGN) */}
-        <div className="shadow-lg rounded-2xl p-3 mb-10">
+        <div className="shadow-lg rounded-2xl p-3 -mt-4 mb-10">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3 items-center">
 
             {/* CATEGORY */}

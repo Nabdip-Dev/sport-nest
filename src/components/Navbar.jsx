@@ -5,10 +5,7 @@ import Link from "next/link";
 import NavLink from "./NavLink";
 import { usePathname } from "next/navigation";
 import { IoIosLogOut } from "react-icons/io";
-import { RiHome4Line } from "react-icons/ri";
-import { MdOutlineOpenInBrowser, MdWavingHand } from "react-icons/md";
 import { CgProfile } from "react-icons/cg";
-import { IoCheckmarkDone } from "react-icons/io5";
 import { useEffect, useRef, useState } from "react";
 
 const Navbar = () => {
@@ -101,13 +98,13 @@ const Navbar = () => {
               {/* BUTTON (select look) */}
               <button
                 onClick={() => setOpen(!open)}
-                className="flex items-center justify-center gap-2 font-semibold relative pl-8 pr-3 py-1 text-[#000000fa]
-    hover:text-white text-[16px] border border-[#0e0500]
+                className="flex items-center justify-center gap-2 font-normal relative pl-8 pr-3 py-1 text-[#000000fa]
+    hover:text-white text-[15px] border border-[#0e0500]
     hover:bg-gradient-to-r from-[#4300fb] to-[#1a3cffe7]
     rounded-full cursor-pointer transition"
               >
-                Profile
-               <span className="text-[13px]">▼</span>
+                {user.name.length > 6 ? user.name.slice(0, 6) + "..." : user.name}
+                <span className="text-[11px]">▼</span>
               </button>
 
               {/* DROPDOWN */}
