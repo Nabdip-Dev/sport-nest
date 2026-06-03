@@ -2,8 +2,6 @@
 import DeleteModal from "@/components/DeleteModal";
 import EditModal from "@/components/EditModal";
 import FacilitiesDetailsClient from "@/components/FacilitiesDetailsClient";
-import { auth } from "@/lib/auth";
-import { headers } from "next/headers";
 import { cookies } from "next/headers";
 
 
@@ -11,8 +9,8 @@ const FacilitiesDetailsPage = async ({ params }) => {
     const { id } = await params
 
     const cookieStore = await cookies();
-    const token = cookieStore.get("better-auth.session_token")?.value;
-    // console.log(token);
+    const token = cookieStore.get("better-auth.session_data")?.value;
+    console.log(token);
 
     const res = await fetch(`http://localhost:5000/destination/${id}`, {
         headers: {
