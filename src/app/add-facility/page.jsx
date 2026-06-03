@@ -1,10 +1,7 @@
-
 "use client";
 
-import { motion } from "framer-motion";
+import { useState, useEffect, useRef } from "react";
 import toast from "react-hot-toast";
-import { useState } from "react";
-
 import {
   FaBuilding,
   FaMapMarkerAlt,
@@ -20,7 +17,6 @@ import {
 
 export default function AddFacility() {
   const [submitted, setSubmitted] = useState(false);
-
   const [formData, setFormData] = useState({
     name: "",
     location: "",
@@ -37,11 +33,7 @@ export default function AddFacility() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const formValid =
@@ -55,7 +47,6 @@ export default function AddFacility() {
     setSubmitted(true);
 
     const required = ["name", "location", "image", "sport"];
-
     const hasError = required.some((f) => !formData[f].trim());
 
     if (hasError) {
@@ -66,15 +57,12 @@ export default function AddFacility() {
     try {
       const res = await fetch("http://localhost:5000/destination", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
 
       if (res.ok) {
         toast.success("Facility Added Successfully!");
-
         setFormData({
           name: "",
           location: "",
@@ -88,7 +76,6 @@ export default function AddFacility() {
           phoneCode: "+91",
           description: "",
         });
-
         setSubmitted(false);
       } else {
         toast.error("Failed To Add Facility!");
@@ -100,47 +87,25 @@ export default function AddFacility() {
   };
 
   return (
-    <section className="relative min-h-screen overflow-hidden bg-[#f4faff] px-3 py-6">
-
-      {/* BG */}
-      <div className="absolute left-0 top-0 h-72 w-72 rounded-full bg-cyan-200/40 blur-3xl"></div>
-      <div className="absolute bottom-0 right-0 h-72 w-72 rounded-full bg-blue-200/40 blur-3xl"></div>
-
-      {/* HEADER */}
-      <motion.div
-        initial={{ opacity: 0, y: -25 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="relative z-10 mx-auto mb-4 max-w-3xl rounded-[28px] border border-white/60 bg-white/70 p-4 shadow-[0_10px_40px_rgba(0,0,0,0.06)] backdrop-blur-xl"
-      >
+    <section className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 px-6 py-12">
+      {/* Header */}
+      <div className="mx-auto mb-8 max-w-3xl rounded-3xl border border-gray-300 bg-white p-8 shadow-xl transition-transform duration-500 hover:-translate-y-1">
         <div className="flex items-center justify-between">
           <div>
-            <motion.h1
-              whileHover={{ x: 3 }}
-              className="text-xl font-black tracking-tight text-slate-800"
-            >
-              Add Facility
-            </motion.h1>
-
-            <p className="mt-1 text-xs text-slate-500">
-              Sports booking form
-            </p>
+            <h1 className="text-3xl font-extrabold text-gray-800">Add Facility</h1>
+            <p className="text-sm text-gray-500 mt-2">Sports booking form</p>
           </div>
-
-          <motion.div
-            whileHover={{ rotate: 8, scale: 1.08 }}
-            className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-blue-500 text-xl text-white shadow-lg"
-          >
-            <FaFutbol />
-          </motion.div>
+          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 text-white shadow-lg">
+            <FaFutbol size={24} />
+          </div>
         </div>
-      </motion.div>
+      </div>
 
-      {/* FORM */}
-      <motion.form
+      {/* Form */}
+      <form
         onSubmit={onSubmit}
-        className="relative z-10 mx-auto grid max-w-3xl gap-3 rounded-[30px] border border-white/60 bg-white/75 p-4 shadow-[0_10px_50px_rgba(0,0,0,0.06)] backdrop-blur-2xl md:grid-cols-2"
+        className="mx-auto max-w-3xl grid gap-6 overflow-auto rounded-3xl border border-gray-200 bg-white p-8 shadow-xl transition-transform duration-500 hover:-translate-y-1 md:grid-cols-2"
       >
-
         <Input
           label="Facility"
           icon={<FaBuilding />}
@@ -217,131 +182,100 @@ export default function AddFacility() {
           onChange={handleChange}
         />
 
-        {/* PHONE */}
-        <motion.div className="space-y-1">
-          <label className="flex items-center gap-2 text-[11px] font-bold uppercase text-slate-500">
-            <FaPhoneAlt />
-            Phone
+        {/* Phone */}
+        <div className="md:col-span-2 space-y-1">
+          <label className="flex items-center gap-2 text-xs font-bold uppercase text-gray-500">
+            <FaPhoneAlt /> Phone
           </label>
-
-          <div className="flex overflow-hidden rounded-2xl border border-slate-200 bg-white">
+          <div className="flex overflow-hidden rounded-2xl border border-gray-300 bg-white transition hover:shadow-lg">
             <select
               name="phoneCode"
               value={formData.phoneCode}
               onChange={handleChange}
-              className="cursor-pointer bg-cyan-50 px-2 text-xs text-slate-700 outline-none"
+              className="bg-gray-50 px-3 text-xs text-gray-700 outline-none"
             >
               <option value="+91">+91</option>
               <option value="+880">+880</option>
               <option value="+1">+1</option>
             </select>
-
             <input
               type="tel"
               name="phone"
               value={formData.phone}
               onChange={handleChange}
               placeholder="Enter phone number"
-              className="w-full cursor-pointer px-3 py-2 text-sm text-slate-700 outline-none"
+              className="w-full px-3 py-2 text-sm text-gray-700 outline-none"
             />
           </div>
-        </motion.div>
+        </div>
 
-        {/* DESCRIPTION */}
-        <motion.div className="space-y-1 md:col-span-2">
-          <label className="flex items-center gap-2 text-[11px] font-bold uppercase text-slate-500">
-            <FaFileAlt />
-            Description
+        {/* Description */}
+        <div className="md:col-span-2 space-y-1">
+          <label className="flex items-center gap-2 text-xs font-bold uppercase text-gray-500">
+            <FaFileAlt /> Description
           </label>
-
           <textarea
             name="description"
             rows={3}
             value={formData.description}
             onChange={handleChange}
             placeholder="Write facility details..."
-            className="w-full cursor-pointer rounded-2xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 outline-none"
+            className="w-full rounded-2xl border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 outline-none transition hover:shadow-lg"
           />
-        </motion.div>
+        </div>
 
-        {/* BUTTON */}
-        <motion.button
+        {/* Submit Button */}
+        <button
           type="submit"
           disabled={!formValid}
-          whileHover={{ scale: formValid ? 1.02 : 1 }}
-          whileTap={{ scale: formValid ? 0.96 : 1 }}
-          className={`md:col-span-2 rounded-2xl py-2.5 text-sm font-bold text-white shadow-lg ${
+          className={`md:col-span-2 rounded-2xl py-3 text-sm font-bold text-white transition-all duration-300 ${
             formValid
-              ? "bg-gradient-to-r from-cyan-500 via-sky-500 to-blue-500"
-              : "cursor-not-allowed bg-slate-300"
+              ? "bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-blue-600 hover:to-cyan-500 shadow-lg"
+              : "bg-gray-300 cursor-not-allowed"
           }`}
         >
           Submit Facility
-        </motion.button>
-      </motion.form>
+        </button>
+      </form>
     </section>
   );
 }
 
-/* INPUT */
-const Input = ({
-  label,
-  icon,
-  required,
-  submitted,
-  value,
-  onChange,
-  placeholder,
-  ...props
-}) => {
+/* Input Component */
+const Input = ({ label, icon, required, submitted, value, onChange, placeholder, ...props }) => {
   const showError = submitted && required && !value?.trim();
-
   return (
-    <motion.div whileHover={{ y: -2 }} className="space-y-1">
-      <label className="flex items-center gap-2 text-[11px] font-bold uppercase text-slate-500">
-        {icon}
-        {label}
-        {required && <span className="ml-1 text-red-500">***</span>}
+    <div className="space-y-1 transition-transform duration-500 hover:scale-[1.02]">
+      <label className="flex items-center gap-2 text-xs font-bold uppercase text-gray-500">
+        {icon} {label} {required && <span className="text-red-500">***</span>}
       </label>
-
       <input
         {...props}
         value={value || ""}
         onChange={onChange}
         placeholder={placeholder}
-        className={`w-full cursor-pointer rounded-2xl border bg-white px-3 py-2 text-sm text-slate-700 outline-none
-        transition-all duration-300 hover:border-cyan-400 hover:shadow-md hover:shadow-cyan-100 focus:border-cyan-500
-        ${
-          showError
-            ? "border-red-500 focus:border-red-500"
-            : "border-slate-200"
+        className={`w-full rounded-2xl border px-3 py-2 text-sm text-gray-700 outline-none transition hover:shadow-lg ${
+          showError ? "border-red-500" : "border-gray-300"
         }`}
       />
-    </motion.div>
+    </div>
   );
 };
 
-/* SELECT */
+/* Select Component */
 const SelectField = ({ submitted, value, onChange }) => {
   const showError = submitted && !value;
-
   return (
-    <motion.div whileHover={{ y: -2 }} className="space-y-1">
-      <label className="flex items-center gap-2 text-[11px] font-bold uppercase text-slate-500">
-        <FaBasketballBall />
-        Sport <span className="text-red-500">***</span>
+    <div className="space-y-1 transition-transform duration-500 hover:scale-[1.02]">
+      <label className="flex items-center gap-2 text-xs font-bold uppercase text-gray-500">
+        <FaBasketballBall /> Sport <span className="text-red-500">***</span>
       </label>
-
       <select
         name="sport"
         value={value}
         onChange={onChange}
-        className={`w-full cursor-pointer rounded-2xl border bg-white px-3 py-2 text-sm text-slate-700 outline-none
-        transition-all duration-300 hover:border-cyan-400 hover:shadow-md hover:shadow-cyan-100 focus:border-cyan-500
-        ${
-          showError
-            ? "border-red-500 focus:border-red-500"
-            : "border-slate-200"
+        className={`w-full rounded-2xl border px-3 py-2 text-sm text-gray-700 outline-none transition hover:shadow-lg ${
+          showError ? "border-red-500" : "border-gray-300"
         }`}
       >
         <option value="">Select sport</option>
@@ -351,7 +285,6 @@ const SelectField = ({ submitted, value, onChange }) => {
         <option value="Basketball">🏀 Basketball</option>
         <option value="Tennis">🎾 Tennis</option>
       </select>
-    </motion.div>
+    </div>
   );
 };
-

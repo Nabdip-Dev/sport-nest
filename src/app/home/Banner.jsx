@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 
 import { useEffect, useState } from "react";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 
 const sportsData = [
   {
@@ -85,6 +86,43 @@ const Banner = () => {
     return () => clearInterval(slider);
   }, []);
 
+
+
+
+  const [cycle, setCycle] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCycle(prev => prev + 1);
+    }, 18000); // full animation + pause
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const text = "Sports Facilities";
+
+  const container = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.9, // smooth letter by letter
+      },
+    },
+  };
+
+  const child = {
+    hidden: { y: 20, opacity: 0 },
+    visible: {
+      y: 0,
+      opacity: 1,
+      transition: {
+        duration: 1,
+        ease: "easeOut",
+      },
+    },
+  };
+
+
   return (
     <section className="relative flex items-center overflow-hidden bg-white py-2 sm:py-4 lg:min-h-[78vh]">
 
@@ -102,6 +140,7 @@ const Banner = () => {
           initial={{ opacity: 0, x: -40 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.7 }}
+          className="flex flex-col mx-auto text-center lg:text-left items-center lg:items-start justify-center lg:justify-start"
         >
 
           {/* Badge */}
@@ -109,22 +148,41 @@ const Banner = () => {
             initial={{ opacity: 0, y: -15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5 }}
-            className="mb-3 inline-flex items-center gap-2 rounded-full border border-blue-100 bg-white px-3 py-1.5 shadow-md"
+            className="mb-3 inline-flex items-center rounded-full border border-blue-100 bg-white pr-3 shadow-md"
           >
-            <Trophy className="h-3.5 w-3.5 text-blue-600" />
+            <DotLottieReact
+              src="https://lottie.host/b13d78cb-badc-412a-8996-c760981f6217/UnJn7rWygB.lottie"
+              loop
+              autoplay
+              style={{ width: 60, height: 40, marginLeft: '-6px' }}
+            />
 
-            <span className="text-xs font-semibold text-slate-700">
-              #1 Sports Booking Platform
+            <span className="text-[16px] font-semibold text-slate-700 -ml-2">
+              Sports Booking Platform
             </span>
           </motion.div>
 
           {/* Heading */}
           <h1 className="text-2xl font-black leading-tight text-slate-900 sm:text-3xl md:text-4xl lg:text-5xl">
-            Book Premium
-            <span className="bg-gradient-to-r from-blue-600 via-cyan-500 to-indigo-500 bg-clip-text text-transparent">
-              {" "}
-              Sports Facilities
-            </span>
+            Book Premium <br />
+            <motion.div
+              key={cycle}   // 🔥 important (full restart)
+              className="inline-block"
+              variants={container}
+              initial="hidden"
+              animate="visible"
+            >
+              {Array.from(text).map((char, i) => (
+                <motion.span
+                  key={i}
+                  variants={child}
+                  style={{ display: "inline-block" }}
+                  className="bg-gradient-to-r from-blue-800 via-cyan-700 to-indigo-600 bg-clip-text text-transparent"
+                >
+                  {char === " " ? "\u00A0" : char}
+                </motion.span>
+              ))}
+            </motion.div>
             <br />
             Anytime, Anywhere
           </h1>
