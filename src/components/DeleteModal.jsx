@@ -2,17 +2,20 @@
 
 import toast from "react-hot-toast";
 import { Trash2 } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 
 const DeleteModal = ({ facility }) => {
 
   const handleDelete = async () => {
+    const { data: tokenData } = await authClient.token()
     try {
       const res = await fetch(
         `http://localhost:5000/destination/${facility._id}`,
         {
           method: "DELETE",
-          headers:{
+          headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${tokenData.token}`
           },
         }
       );

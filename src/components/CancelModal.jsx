@@ -2,12 +2,15 @@
 
 import toast from "react-hot-toast";
 import { XCircle } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 
 const CancelModal = ({ item }) => {
 
   const modalId = `cancel_modal_${item._id}`;
 
   const handleCancel = async () => {
+    const { data: tokenData } = await authClient.token()
+
     try {
       const res = await fetch(
         `http://localhost:5000/booking/${item._id}`,
@@ -15,6 +18,7 @@ const CancelModal = ({ item }) => {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${tokenData.token}`
           },
         }
       );

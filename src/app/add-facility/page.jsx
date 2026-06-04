@@ -1,5 +1,6 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import { useState, useEffect, useRef } from "react";
 import toast from "react-hot-toast";
 import {
@@ -54,10 +55,16 @@ export default function AddFacility() {
       return;
     }
 
+    const { data: tokenData } = await authClient.token()
+    // console.log(tokenData);
+
     try {
       const res = await fetch("http://localhost:5000/destination", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${tokenData.token}`, 
+        },
         body: JSON.stringify(formData),
       });
 

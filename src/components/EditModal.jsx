@@ -17,6 +17,7 @@ import {
     FaFileAlt,
     FaEdit,
 } from "react-icons/fa";
+import { authClient } from "@/lib/auth-client";
 
 const EditModal = ({ facility, fetchFacilities }) => {
     const router = useRouter();
@@ -58,6 +59,9 @@ const EditModal = ({ facility, fetchFacilities }) => {
             )
         );
 
+
+        const { data: tokenData } = await authClient.token()
+
         try {
             const res = await fetch(
                 `http://localhost:5000/destination/${facility._id}`,
@@ -65,6 +69,7 @@ const EditModal = ({ facility, fetchFacilities }) => {
                     method: "PATCH",
                     headers: {
                         "Content-Type": "application/json",
+                        "Authorization": `Bearer ${tokenData.token}`
                     },
                     body: JSON.stringify(filteredData),
                 }

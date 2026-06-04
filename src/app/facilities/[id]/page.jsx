@@ -3,7 +3,7 @@ import DeleteModal from "@/components/DeleteModal";
 import EditModal from "@/components/EditModal";
 import FacilitiesDetailsClient from "@/components/FacilitiesDetailsClient";
 import { auth } from "@/lib/auth";
-import { cookies, headers } from "next/headers";
+import { headers } from "next/headers";
 
 
 const FacilitiesDetailsPage = async ({ params }) => {
