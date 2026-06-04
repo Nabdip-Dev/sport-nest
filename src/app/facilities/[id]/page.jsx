@@ -2,21 +2,29 @@
 import DeleteModal from "@/components/DeleteModal";
 import EditModal from "@/components/EditModal";
 import FacilitiesDetailsClient from "@/components/FacilitiesDetailsClient";
-import { cookies } from "next/headers";
+import { auth } from "@/lib/auth";
+import { cookies, headers } from "next/headers";
 
 
 const FacilitiesDetailsPage = async ({ params }) => {
     const { id } = await params
 
-    const cookieStore = await cookies();
-    const token = cookieStore.get("better-auth.session_data")?.value;
-    console.log(token);
+    const tokenObj = await auth.api.getToken({ headers: await headers() });
+    const tokenString = tokenObj.token;
 
     const res = await fetch(`http://localhost:5000/destination/${id}`, {
+        method: "GET",
         headers: {
-            authorization: `Bearer ${token}`
+            "Authorization": `Bearer ${tokenString}`,
+            "Content-Type": "application/json"
         }
     });
+
+    // const res = await fetch(`http://localhost:5000/destination/${id}`, {
+    //     headers: {
+    //         authorization: `Bearer ${token}`
+    //     }
+    // });
 
     const facility = await res.json();
     const { _id, name, sport, price, open, close, description, image, location, email, phone, phoneCode } = facility
