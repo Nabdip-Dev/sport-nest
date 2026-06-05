@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
-import { useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 
 import {
@@ -21,19 +21,40 @@ import { authClient } from "@/lib/auth-client";
 
 const EditModal = ({ facility, fetchFacilities }) => {
     const router = useRouter();
+    const modalRef = useRef(null);
+
     const [formData, setFormData] = useState({
-        name: facility?.name || "",
-        location: facility?.location || "",
-        image: facility?.image || "",
-        sport: facility?.sport || "",
-        price: facility?.price || "",
-        open: facility?.open || "",
-        close: facility?.close || "",
-        email: facility?.email || "",
-        phone: facility?.phone || "",
-        phoneCode: facility?.phoneCode || "+91",
-        description: facility?.description || "",
+        name: "",
+        location: "",
+        image: "",
+        sport: "",
+        price: "",
+        open: "",
+        close: "",
+        email: "",
+        phone: "",
+        phoneCode: "+91",
+        description: "",
     });
+
+    // ✅ FIX: stable prefill when facility changes
+    useEffect(() => {
+        if (!facility) return;
+
+        setFormData({
+            name: facility?.name || "",
+            location: facility?.location || "",
+            image: facility?.image || "",
+            sport: facility?.sport || "",
+            price: facility?.price || "",
+            open: facility?.open || "",
+            close: facility?.close || "",
+            email: facility?.email || "",
+            phone: facility?.phone || "",
+            phoneCode: facility?.phoneCode || "+91",
+            description: facility?.description || "",
+        });
+    }, [facility?._id]);
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -52,15 +73,11 @@ const EditModal = ({ facility, fetchFacilities }) => {
             return;
         }
 
-        // ONLY SEND NON-EMPTY FIELDS
         const filteredData = Object.fromEntries(
-            Object.entries(formData).filter(
-                ([key, value]) => value !== ""
-            )
+            Object.entries(formData).filter(([_, value]) => value !== "")
         );
 
-
-        const { data: tokenData } = await authClient.token()
+        const { data: tokenData } = await authClient.token();
 
         try {
             const res = await fetch(
@@ -69,7 +86,7 @@ const EditModal = ({ facility, fetchFacilities }) => {
                     method: "PATCH",
                     headers: {
                         "Content-Type": "application/json",
-                        "Authorization": `Bearer ${tokenData.token}`
+                        Authorization: `Bearer ${tokenData.token}`,
                     },
                     body: JSON.stringify(filteredData),
                 }
@@ -80,14 +97,12 @@ const EditModal = ({ facility, fetchFacilities }) => {
             if (res.ok) {
                 toast.success("Facility Updated Successfully!");
 
-                // REFRESH DATA WITHOUT RELOAD
-                if (fetchFacilities) {
-                    fetchFacilities();
-                }
+                // refresh list without reload
+                fetchFacilities?.();
 
-
-                document.getElementById("edit_modal").close();
-                router.refresh();
+                // close modal safely
+                modalRef.current?.close();
+                window.location.reload();
             } else {
                 toast.error(data?.message || "Update Failed!");
             }
@@ -97,21 +112,40 @@ const EditModal = ({ facility, fetchFacilities }) => {
         }
     };
 
+    // ✅ FIX: open modal with guaranteed fresh data
+    const openModal = () => {
+        if (!facility) return;
+
+        setFormData({
+            name: facility?.name || "",
+            location: facility?.location || "",
+            image: facility?.image || "",
+            sport: facility?.sport || "",
+            price: facility?.price || "",
+            open: facility?.open || "",
+            close: facility?.close || "",
+            email: facility?.email || "",
+            phone: facility?.phone || "",
+            phoneCode: facility?.phoneCode || "+91",
+            description: facility?.description || "",
+        });
+
+        modalRef.current?.showModal();
+    };
+
     return (
         <div>
             {/* OPEN BUTTON */}
             <button
                 className="btn btn-sm bg-blue-600 hover:bg-blue-700 text-white border-none"
-                onClick={() =>
-                    document.getElementById("edit_modal").showModal()
-                }
+                onClick={openModal}
             >
                 <FaEdit />
                 Edit
             </button>
 
             {/* MODAL */}
-            <dialog id="edit_modal" className="modal">
+            <dialog ref={modalRef} id="edit_modal" className="modal">
                 <div className="modal-box max-w-4xl p-0 bg-transparent shadow-none">
                     <section className="relative overflow-hidden bg-[#f4faff] px-3 py-5 rounded-3xl">
 
