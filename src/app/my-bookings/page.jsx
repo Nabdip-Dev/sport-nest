@@ -28,10 +28,35 @@ const MyBookings = async () => {
 
     return (
         <div>
-            <h1>My Bookings</h1>
+            <div className="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between bg-white/60 backdrop-blur-md rounded-2xl shadow-lg border border-gray-100">
+
+                <h1 className="text-3xl font-bold text-gray-900">
+                    My Bookings
+                </h1>
+
+                <div className="flex items-center gap-2">
+                    <span className="text-gray-500 text-sm">Bookings</span>
+                    <span className="px-4 py-1 rounded-full bg-emerald-100 text-emerald-700 font-bold">
+                        {booking?.length || 0}
+                    </span>
+                </div>
+
+            </div>
 
             <div className="flex flex-col w-full max-w-5xl justify-center mx-auto px-6  gap-6 my-8">
-                {booking?.map((item) => (
+                { booking.length === 0 ? (
+                    <div className="flex flex-col items-center justify-center py-20 bg-gray-50 rounded-3xl shadow-lg">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                            No bookings found
+                        </h2>
+                        <p className="text-gray-600 mb-6">
+                            Please login to see your bookings
+                        </p>
+                        <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                            Login
+                        </button>
+                    </div>
+                ) : (booking?.map((item) => (
                     <div
                         key={item._id}
                         className="bg-white rounded-3xl shadow-lg hover:shadow-2xl transition-shadow duration-300 border border-gray-200 overflow-hidden"
@@ -97,10 +122,12 @@ const MyBookings = async () => {
 
                         </div>
                     </div>
-                ))}
+                )))}
+
             </div>
         </div>
     );
 };
+
 
 export default MyBookings;

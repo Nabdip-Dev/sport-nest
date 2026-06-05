@@ -1,7 +1,7 @@
 "use client";
 
 import { authClient } from "@/lib/auth-client";
-import { useState, useEffect, useRef } from "react";
+import { useState, } from "react";
 import toast from "react-hot-toast";
 import {
   FaBuilding,
@@ -94,12 +94,12 @@ export default function AddFacility() {
   };
 
   return (
-    <section className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-50 px-6 py-12">
+    <section className="min-h-screen bg-gradient-to-br from-amber-50 via-[#abfcf941] to-[#baffdb00] px-6 py-12">
       {/* Header */}
-      <div className="mx-auto mb-8 max-w-3xl rounded-3xl border border-gray-300 bg-white p-8 shadow-xl transition-transform duration-500 hover:-translate-y-1">
+      <div className="mx-auto mb-8 max-w-3xl rounded-3xl border border-white bg-gradient-to-b from-sky-50 to-blue-100 px-8 py-2 shadow-xl transition-transform duration-500 hover:-translate-y-1">
         <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-extrabold text-gray-800">Add Facility</h1>
+            <h1 className="text-3xl font-extrabold text-blue-800">Add Facility</h1>
             <p className="text-sm text-gray-500 mt-2">Sports booking form</p>
           </div>
           <div className="flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-tr from-cyan-400 to-blue-500 text-white shadow-lg">
@@ -111,7 +111,7 @@ export default function AddFacility() {
       {/* Form */}
       <form
         onSubmit={onSubmit}
-        className="mx-auto max-w-3xl grid gap-6 overflow-auto rounded-3xl border border-gray-200 bg-white p-8 shadow-xl transition-transform duration-500 hover:-translate-y-1 md:grid-cols-2"
+        className="mx-auto max-w-3xl grid gap-6 overflow-auto rounded-3xl border border-white bg-gradient-to-b from-blue-50 p-8 shadow-xl transition-transform duration-500 hover:-translate-y-1 md:grid-cols-2"
       >
         <Input
           label="Facility"
@@ -194,7 +194,7 @@ export default function AddFacility() {
           <label className="flex items-center gap-2 text-xs font-bold uppercase text-gray-500">
             <FaPhoneAlt /> Phone
           </label>
-          <div className="flex overflow-hidden rounded-2xl border border-gray-300 bg-white transition hover:shadow-lg">
+          <div className="flex overflow-hidden rounded-2xl border border-blue-200 hover:border-blue-500 bg-white transition hover:shadow-lg">
             <select
               name="phoneCode"
               value={formData.phoneCode}
@@ -227,7 +227,7 @@ export default function AddFacility() {
             value={formData.description}
             onChange={handleChange}
             placeholder="Write facility details..."
-            className="w-full rounded-2xl border border-gray-300 bg-white px-3 py-2 text-sm text-gray-700 outline-none transition hover:shadow-lg"
+            className="w-full rounded-2xl border border-blue-200 hover:border-blue-500 bg-white px-3 py-2 text-sm text-gray-700 outline-none transition hover:shadow-lg"
           />
         </div>
 
@@ -261,8 +261,8 @@ const Input = ({ label, icon, required, submitted, value, onChange, placeholder,
         value={value || ""}
         onChange={onChange}
         placeholder={placeholder}
-        className={`w-full rounded-2xl border px-3 py-2 text-sm text-gray-700 outline-none transition hover:shadow-lg ${
-          showError ? "border-red-500" : "border-gray-300"
+        className={`w-full rounded-2xl border hover:border-blue-500 bg-white/70 px-3 py-2 text-sm text-gray-700 outline-none transition hover:shadow-lg ${
+          showError ? "border-red-500" : "border-blue-200"
         }`}
       />
     </div>
@@ -281,8 +281,8 @@ const SelectField = ({ submitted, value, onChange }) => {
         name="sport"
         value={value}
         onChange={onChange}
-        className={`w-full rounded-2xl border px-3 py-2 text-sm text-gray-700 outline-none transition hover:shadow-lg ${
-          showError ? "border-red-500" : "border-gray-300"
+        className={`w-full rounded-2xl border hover:border-blue-500 px-3 py-2 text-sm text-gray-700 outline-none transition hover:shadow-lg ${
+          showError ? "border-red-500" : "border-blue-200"
         }`}
       >
         <option value="">Select sport</option>
