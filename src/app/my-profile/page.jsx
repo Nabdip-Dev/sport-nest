@@ -3,326 +3,749 @@
 import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
 import Link from "next/link";
-import { FaEdit, FaTrash, FaEnvelope, FaUser } from "react-icons/fa";
+
+import {
+  FaEdit,
+  FaTrash,
+  FaEnvelope,
+  FaUser,
+  FaIdCard
+} from "react-icons/fa";
+
 import { MdVerified } from "react-icons/md";
+
+import { motion } from "framer-motion";
+import { toast } from "react-hot-toast";
+
 
 
 export default function MyProfile() {
 
-    const { data: session, isPending } = authClient.useSession();
 
-    const user = session?.user;
+  const { data: session, isPending } = authClient.useSession();
 
-
-    const [deleting, setDeleting] = useState(false);
+  const user = session?.user;
 
 
-
-    const deleteAccount = async () => {
-
-
-        const confirmDelete = confirm(
-            "Are you sure you want to delete your account?"
-        );
+  const [deleting, setDeleting] = useState(false);
 
 
-        if (!confirmDelete) return;
 
 
-        try {
-
-            setDeleting(true);
 
 
-            const token = await authClient.getToken();
+
+  const confirmDeleteAccount = async () => {
 
 
-            await fetch(
-                "http://localhost:5000/profile",
-                {
-                    method: "DELETE",
-
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
-            );
+    try {
 
 
-            await authClient.signOut();
+      setDeleting(true);
 
 
-            window.location.href = "/";
+
+      const token = await authClient.getToken();
 
 
-        } catch (error) {
 
-            console.log(error);
-
-        } finally {
-
-            setDeleting(false);
-
+      const res = await fetch(
+        "http://localhost:5000/profile",
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
         }
-
-    };
-
+      );
 
 
-    if (isPending) {
 
-        return (
 
-            <div className="min-h-screen flex justify-center items-center">
 
-                <span className="loading loading-spinner text-black"></span>
+      if (!res.ok) {
 
-            </div>
+        throw new Error();
 
-        );
+      }
+
+
+
+
+
+      toast.success(
+        "Account deleted successfully"
+      );
+
+
+
+
+      await authClient.signOut();
+
+
+
+
+      setTimeout(() => {
+
+        window.location.href = "/";
+
+      }, 1200);
+
+
+
+
+    }
+    catch (error) {
+
+
+      toast.error(
+        "Delete failed. Try again!"
+      );
+
+
+    }
+    finally {
+
+
+      setDeleting(false);
+
 
     }
 
 
 
-    if (!user) {
+  };
 
-        return (
 
-            <div className="min-h-screen flex justify-center items-center">
 
-                <h2 className="text-black text-2xl font-bold">
-                    Please Login First
-                </h2>
 
-            </div>
 
-        );
 
-    }
 
+  const deleteAccount = () => {
+
+
+    toast.custom(
+      (t) => (
+        <div
+          className="
+        fixed
+        left-1/2
+        -translate-x-1/2
+        bg-white
+        shadow-xl
+        border
+        border-gray-100
+        rounded-2xl
+        p-5
+        w-[320px]
+      "
+        >
+          <p
+            className="
+          text-gray-800
+          font-semibold
+          mb-4
+        "
+          >
+            Delete your account permanently?
+          </p>
+
+          <div
+            className="
+          flex
+          gap-3
+        "
+          >
+            <button
+              onClick={() => {
+                toast.dismiss(t.id);
+                confirmDeleteAccount();
+              }}
+              className="
+            flex-1
+            bg-red-500
+            hover:bg-red-600
+            text-white
+            py-2
+            rounded-lg
+            text-sm
+            font-semibold
+          "
+            >
+              Delete
+            </button>
+
+            <button
+              onClick={() => toast.dismiss(t.id)}
+              className="
+            flex-1
+            bg-gray-100
+            hover:bg-gray-200
+            text-gray-700
+            py-2
+            rounded-lg
+            text-sm
+            font-semibold
+          "
+            >
+              Cancel
+            </button>
+          </div>
+        </div>
+      ),
+      {
+        duration: 5000,
+        position: "top-center",
+      }
+    );
+
+
+  };
+
+
+  if (isPending) {
 
 
     return (
 
-        <div className="min-h-screen bg-gradient-to-br from-white via-slate-100 to-blue-100 p-6">
+      <div className="
+      min-h-screen
+      flex
+      justify-center
+      items-center
+      bg-blue-50
+      ">
 
 
-            <div className="max-w-4xl mx-auto bg-white rounded-[40px] shadow-2xl overflow-hidden border">
+        <span className="
+        loading
+        loading-spinner
+        text-blue-600
+        "></span>
 
 
-                {/* Cover */}
+      </div>
 
-                <div className="h-40 bg-gradient-to-r from-slate-900 to-blue-700">
-                    
-                </div>
+    );
 
 
+  }
 
-                {/* Profile */}
 
-                <div className="px-10 pb-10 -mt-20 text-center">
+  if (!user) {
 
 
-                    <img
-                        src={
-                            user.image ||
-                            "https://i.ibb.co/4pDNDk1/avatar.png"
-                        }
-                        alt="profile"
-                        className="w-36 h-36 mx-auto rounded-full border-8 border-white shadow-xl object-cover"
-                    />
+    return (
 
+      <div className="
+      min-h-screen
+      flex
+      items-center
+      justify-center
+      bg-blue-50
+      ">
 
+        <h2 className="
+        text-2xl
+        font-bold
+        text-gray-800
+        ">
 
-                    <h1 className="text-4xl font-extrabold text-black mt-5 flex justify-center items-center gap-2">
+          Please Login First
 
-                        {user.name}
+        </h2>
 
-                        <MdVerified className="text-blue-600"/>
 
-                    </h1>
+      </div>
 
 
+    );
 
-                    <p className="text-black font-medium mt-2">
-                        {user.email}
-                    </p>
 
+  }
 
+  return (
 
-                </div>
 
+    <div className="
+min-h-screen
+bg-gradient-to-br
+from-blue-50
+via-white
+to-slate-100
+px-4
+py-8
+">
 
+      <motion.div
 
 
+        initial={{
+          opacity: 0,
+          y: 25
+        }}
 
-                {/* Details */}
 
+        animate={{
+          opacity: 1,
+          y: 0
+        }}
 
-                <div className="grid md:grid-cols-2 gap-6 px-10">
 
+        transition={{
+          duration: .5
+        }}
 
-                    <div className="bg-white border rounded-3xl p-7 shadow-lg">
+        className="
+max-w-3xl
+mx-auto
+bg-white/90
+backdrop-blur-xl
+rounded-3xl
+shadow-xl
+border
+border-gray-100
+overflow-hidden
+"
 
-
-                        <h2 className="text-2xl font-bold text-black mb-6">
-                            Personal Information
-                        </h2>
-
-
-
-                        <div className="space-y-5">
-
-
-                            <div className="flex items-center gap-4">
-
-                                <FaUser className="text-black"/>
-
-                                <div>
-
-                                    <p className="text-sm text-black">
-                                        Name
-                                    </p>
-
-                                    <p className="font-bold text-black">
-                                        {user.name}
-                                    </p>
-
-                                </div>
-
-                            </div>
-
-
-
-
-
-                            <div className="flex items-center gap-4">
-
-                                <FaEnvelope className="text-black"/>
-
-                                <div>
-
-                                    <p className="text-sm text-black">
-                                        Email
-                                    </p>
-
-                                    <p className="font-bold text-black">
-                                        {user.email}
-                                    </p>
-
-                                </div>
-
-                            </div>
-
-
-                        </div>
-
-
-                    </div>
-
-
-
-
-
-
-                    <div className="bg-white border rounded-3xl p-7 shadow-lg">
-
-
-                        <h2 className="text-2xl font-bold text-black mb-6">
-                            Account Details
-                        </h2>
-
-
-
-                        <p className="text-black font-semibold">
-                            User ID
-                        </p>
-
-
-                        <p className="text-black break-all mt-2">
-                            {user.id}
-                        </p>
-
-
-                    </div>
-
-
-
-                </div>
-
-
-
-
-
-                {/* Buttons */}
-
-
-                <div className="flex justify-center gap-5 py-10">
-
-
-                    <Link href="/my-profile/edit">
-
-                        <button
-                            className="
-                            flex items-center gap-2
-                            bg-black
-                            text-white
-                            px-8 py-3
-                            rounded-full
-                            font-bold
-                            hover:bg-blue-700
-                            transition
-                            "
-                        >
-
-                            <FaEdit/>
-
-                            Edit Profile
-
-                        </button>
-
-
-                    </Link>
-
-
-
-
-
-                    <button
-
-                        onClick={deleteAccount}
-
-                        className="
-                        flex items-center gap-2
-                        bg-red-600
-                        text-white
-                        px-8 py-3
-                        rounded-full
-                        font-bold
-                        hover:bg-red-700
-                        transition
-                        "
-
-                    >
-
-                        <FaTrash/>
-
-                        {deleting ? "Deleting..." : "Delete Account"}
-
-                    </button>
-
-
-                </div>
-
-
-
-
-            </div>
-
+      >
+
+        {/* cover */}
+
+        <div className="
+h-28
+bg-gradient-to-r
+from-blue-100
+via-indigo-100
+to-purple-100
+">
 
         </div>
 
-    );
+        {/* profile */}
+
+
+        <div className="
+text-center
+-translate-y-12
+px-5
+">
+
+
+
+
+
+
+          <motion.img
+
+
+            initial={{
+              scale: .85,
+              opacity: 0
+            }}
+
+
+            animate={{
+              scale: 1,
+              opacity: 1
+            }}
+
+
+            transition={{
+              duration: .4
+            }}
+
+
+
+            src={
+              user.image ||
+              "https://i.ibb.co/4pDNDk1/avatar.png"
+            }
+
+
+
+            alt="profile"
+
+
+
+            className="
+w-24
+h-24
+mx-auto
+rounded-full
+object-cover
+border-8
+border-white
+shadow-lg
+"
+
+
+          />
+
+
+
+
+
+
+
+          <h1 className="
+mt-4
+text-2xl
+md:text-3xl
+font-bold
+text-gray-900
+flex
+justify-center
+items-center
+gap-2
+">
+
+
+            {user.name}
+
+
+            <MdVerified className="
+text-blue-500
+text-xl
+"/>
+
+
+          </h1>
+
+          <p className="
+mt-2
+text-gray-500
+text-sm
+">
+            {user.email}
+
+          </p>
+
+        </div>
+
+        <div className="
+grid
+md:grid-cols-2
+gap-4
+px-5
+pb-6
+">
+
+          <motion.div
+
+            whileHover={{
+              y: -3
+            }}
+
+
+            className="
+bg-white
+rounded-2xl
+p-5
+border
+shadow-sm
+"
+
+
+          >
+
+
+            <h2 className="
+text-lg
+font-bold
+text-gray-800
+mb-4
+">
+              Personal Info
+
+            </h2>
+
+            <div className="
+space-y-4
+">
+
+
+              <div className="
+flex
+items-center
+gap-3
+">
+
+
+                <div className="
+bg-blue-100
+p-3
+rounded-xl
+">
+
+                  <FaUser className="
+text-blue-600
+"/>
+
+                </div>
+
+                <div>
+
+                  <p className="
+text-xs
+text-gray-400
+">
+
+                    Name
+
+                  </p>
+
+
+                  <p className="
+font-semibold
+text-gray-800
+">
+
+                    {user.name}
+
+                  </p>
+
+                </div>
+
+              </div>
+
+              <div className="
+flex
+items-center
+gap-3
+">
+
+
+                <div className="
+bg-purple-100
+p-3
+rounded-xl
+">
+
+                  <FaEnvelope className="
+text-purple-600
+"/>
+
+                </div>
+
+
+
+                <div>
+
+                  <p className="
+text-xs
+text-gray-400
+">
+
+                    Email
+
+                  </p>
+
+
+                  <p className="
+font-semibold
+text-gray-800
+break-all
+">
+
+                    {user.email}
+
+                  </p>
+
+                </div>
+
+              </div>
+
+            </div>
+
+          </motion.div>
+
+          <motion.div
+
+
+            whileHover={{
+              y: -3
+            }}
+
+
+
+            className="
+bg-white
+rounded-2xl
+p-5
+border
+shadow-sm
+"
+
+
+          >
+
+
+            <h2 className="
+text-lg
+font-bold
+text-gray-800
+mb-4
+">
+              Account
+
+            </h2>
+
+            <div className="
+flex
+items-center
+gap-3
+bg-gray-50
+rounded-xl
+p-4
+">
+
+              <div className="
+bg-green-100
+p-3
+rounded-xl
+">
+
+                <FaIdCard className="
+text-green-600
+"/>
+              </div>
+
+              <div>
+
+                <p className="
+text-xs
+text-gray-400
+">
+                  User ID
+
+                </p>
+
+
+                <p className="
+text-sm
+font-semibold
+text-gray-700
+break-all
+">
+                  {user.id}
+
+                </p>
+
+              </div>
+
+            </div>
+
+          </motion.div>
+
+        </div>
+
+
+        <div className="
+flex
+flex-col
+sm:flex-row
+justify-center
+gap-3
+pb-7
+px-5
+">
+
+          <Link href="/my-profile/edit">
+
+
+            <motion.button
+
+
+              whileHover={{
+                scale: 1.03
+              }}
+
+
+              whileTap={{
+                scale: .97
+              }}
+
+
+
+              className="
+flex
+justify-center
+items-center
+gap-2
+bg-blue-600
+hover:bg-blue-700
+text-white
+px-7
+py-3
+rounded-xl
+font-semibold
+shadow-md
+"
+
+            >
+              <FaEdit />
+              Edit Profile
+            </motion.button>
+
+          </Link>
+
+          <motion.button
+
+
+            whileHover={{
+              scale: 1.03
+            }}
+
+            whileTap={{
+              scale: .97
+            }}
+
+            disabled={deleting}
+
+            onClick={deleteAccount}
+
+            className="
+flex
+justify-center
+items-center
+gap-2
+bg-gradient-to-r
+from-red-500
+to-rose-600
+disabled:opacity-50
+text-white
+px-7
+py-3
+rounded-xl
+font-semibold
+shadow-md
+"
+
+
+          >
+            <FaTrash />
+
+
+            {
+              deleting
+                ?
+                "Deleting..."
+                :
+                "Delete Account"
+            }
+
+          </motion.button>
+
+        </div>
+
+      </motion.div>
+
+    </div>
+
+
+  );
+
 
 }
