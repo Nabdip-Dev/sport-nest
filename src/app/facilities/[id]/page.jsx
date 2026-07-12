@@ -33,13 +33,6 @@ const FacilitiesDetailsPage = async ({ params }) => {
     return (
         <div className="flex-col pt-6 pb-10 bg-gradient-to-br from-gray-50 via-white to-blue-50 flex items-center justify-center px-3 text-black">
 
-            <div className="w-full max-w-5xl">
-                <div className="pb-6 flex  gap-4 justify-end items-end">
-                    <span> <EditModal facility={facility} /> </span>
-                    <span> <DeleteModal facility={facility} /> </span>
-                </div>
-            </div>
-
             <FacilitiesDetailsClient facility={facility} />
 
         </div>
