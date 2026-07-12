@@ -1,6 +1,7 @@
 import CancelModal from '@/components/CancelModal';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
+import Link from 'next/link';
 import React from 'react';
 
 const MyBookings = async () => {
@@ -44,17 +45,19 @@ const MyBookings = async () => {
             </div>
 
             <div className="flex flex-col w-full max-w-5xl justify-center mx-auto px-6  gap-6 my-8">
-                { booking.length === 0 ? (
+                {booking.length === 0 ? (
                     <div className="flex flex-col items-center justify-center py-20 bg-gray-50 rounded-3xl shadow-lg">
                         <h2 className="text-2xl font-bold text-gray-800 mb-4">
                             No bookings found
                         </h2>
                         <p className="text-gray-600 mb-6">
-                            Please login to see your bookings
+                             Browse our available facilities and book the one that suits your needs.
                         </p>
-                        <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
-                            Login
-                        </button>
+                        <Link href="/facilities">
+                            <button className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition">
+                                Browse Facilities
+                            </button>
+                        </Link>
                     </div>
                 ) : (booking?.map((item) => (
                     <div
