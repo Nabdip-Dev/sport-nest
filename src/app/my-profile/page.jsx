@@ -2,163 +2,327 @@
 
 import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
-import {
-  User,
-  Settings,
-  ShieldCheck,
-  Pencil,
-  Trash2,
-  Camera,
-  Mail,
-  Calendar,
-  MapPin,
-  Phone,
-  LogOut,
-} from "lucide-react";
+import Link from "next/link";
+import { FaEdit, FaTrash, FaEnvelope, FaUser } from "react-icons/fa";
+import { MdVerified } from "react-icons/md";
+
+
+export default function MyProfile() {
+
+    const { data: session, isPending } = authClient.useSession();
+
+    const user = session?.user;
+
+
+    const [deleting, setDeleting] = useState(false);
 
 
 
-const MyProfilePage = () => {
-  const { data: session, isPending } = authClient.useSession();
+    const deleteAccount = async () => {
 
-  const [openEdit, setOpenEdit] = useState(false);
 
-  const user = session?.user;
+        const confirmDelete = confirm(
+            "Are you sure you want to delete your account?"
+        );
 
-  const handleLogout = async () => {
-    await authClient.signOut();
-    window.location.reload();
-  };
 
-  if (isPending) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-[#f8fbff]">
-        <span className="loading loading-spinner loading-lg text-[#2563eb]"></span>
-      </div>
-    );
-  }
+        if (!confirmDelete) return;
 
-  if (!user) {
-    return (
-      <div className="min-h-screen flex justify-center items-center">
-        <div className="bg-white rounded-3xl shadow-xl border border-blue-100 p-10 text-center">
 
-          <User
-            size={70}
-            className="mx-auto text-[#2563eb]"
-          />
+        try {
 
-          <h2 className="text-3xl font-black mt-5 text-[#001136]">
-            Please Login
-          </h2>
+            setDeleting(true);
 
-          <p className="text-slate-500 mt-2">
-            Login to access your profile.
-          </p>
 
-        </div>
-      </div>
-    );
-  }
+            const token = await authClient.getToken();
 
-  return (
-    <section className="min-h-screen bg-gradient-to-b from-[#ffffff] via-[#f6f9ff] to-[#eef5ff] py-10">
 
-      <div className="w-11/12 max-w-7xl mx-auto space-y-8">
+            await fetch(
+                "http://localhost:5000/profile",
+                {
+                    method: "DELETE",
 
-        {/* HEADER */}
-        <ProfileHeader
-          user={user}
-          setOpenEdit={setOpenEdit}
-        />
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+            );
 
-        {/* BODY */}
 
-        <div className="grid xl:grid-cols-3 gap-8">
+            await authClient.signOut();
 
-          {/* LEFT */}
 
-          <div className="xl:col-span-2 space-y-8">
+            window.location.href = "/";
 
-            <ProfileInfo user={user} />
 
-          </div>
+        } catch (error) {
 
-          {/* RIGHT */}
+            console.log(error);
 
-          <div className="space-y-8">
+        } finally {
 
-            <ProfileStats />
+            setDeleting(false);
 
-            <QuickActions
-              handleLogout={handleLogout}
-            />
+        }
 
-          </div>
+    };
 
-        </div>
 
-      </div>
 
-      {/* Edit Modal */}
+    if (isPending) {
 
-      {openEdit && (
-        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex justify-center items-center">
+        return (
 
-          <div className="bg-white rounded-[30px] p-8 w-[95%] max-w-lg shadow-2xl">
+            <div className="min-h-screen flex justify-center items-center">
 
-            <h2 className="text-3xl font-black text-[#001136]">
-              Edit Profile
-            </h2>
-
-            <p className="text-slate-500 mt-2">
-              This feature will be connected with database.
-            </p>
-
-            <div className="mt-8 space-y-5">
-
-              <input
-                defaultValue={user.name}
-                className="input input-bordered w-full rounded-2xl"
-              />
-
-              <input
-                defaultValue={user.email}
-                disabled
-                className="input input-bordered w-full rounded-2xl"
-              />
-
-              <input
-                placeholder="Photo URL"
-                className="input input-bordered w-full rounded-2xl"
-              />
+                <span className="loading loading-spinner text-black"></span>
 
             </div>
 
-            <div className="flex gap-4 mt-8">
+        );
 
-              <button
-                className="btn flex-1 bg-[#2563eb] text-white rounded-2xl"
-              >
-                Save Changes
-              </button>
+    }
 
-              <button
-                onClick={() => setOpenEdit(false)}
-                className="btn flex-1 rounded-2xl"
-              >
-                Cancel
-              </button>
+
+
+    if (!user) {
+
+        return (
+
+            <div className="min-h-screen flex justify-center items-center">
+
+                <h2 className="text-black text-2xl font-bold">
+                    Please Login First
+                </h2>
 
             </div>
 
-          </div>
+        );
+
+    }
+
+
+
+    return (
+
+        <div className="min-h-screen bg-gradient-to-br from-white via-slate-100 to-blue-100 p-6">
+
+
+            <div className="max-w-4xl mx-auto bg-white rounded-[40px] shadow-2xl overflow-hidden border">
+
+
+                {/* Cover */}
+
+                <div className="h-40 bg-gradient-to-r from-slate-900 to-blue-700">
+                    
+                </div>
+
+
+
+                {/* Profile */}
+
+                <div className="px-10 pb-10 -mt-20 text-center">
+
+
+                    <img
+                        src={
+                            user.image ||
+                            "https://i.ibb.co/4pDNDk1/avatar.png"
+                        }
+                        alt="profile"
+                        className="w-36 h-36 mx-auto rounded-full border-8 border-white shadow-xl object-cover"
+                    />
+
+
+
+                    <h1 className="text-4xl font-extrabold text-black mt-5 flex justify-center items-center gap-2">
+
+                        {user.name}
+
+                        <MdVerified className="text-blue-600"/>
+
+                    </h1>
+
+
+
+                    <p className="text-black font-medium mt-2">
+                        {user.email}
+                    </p>
+
+
+
+                </div>
+
+
+
+
+
+                {/* Details */}
+
+
+                <div className="grid md:grid-cols-2 gap-6 px-10">
+
+
+                    <div className="bg-white border rounded-3xl p-7 shadow-lg">
+
+
+                        <h2 className="text-2xl font-bold text-black mb-6">
+                            Personal Information
+                        </h2>
+
+
+
+                        <div className="space-y-5">
+
+
+                            <div className="flex items-center gap-4">
+
+                                <FaUser className="text-black"/>
+
+                                <div>
+
+                                    <p className="text-sm text-black">
+                                        Name
+                                    </p>
+
+                                    <p className="font-bold text-black">
+                                        {user.name}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+
+
+
+                            <div className="flex items-center gap-4">
+
+                                <FaEnvelope className="text-black"/>
+
+                                <div>
+
+                                    <p className="text-sm text-black">
+                                        Email
+                                    </p>
+
+                                    <p className="font-bold text-black">
+                                        {user.email}
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+
+                        </div>
+
+
+                    </div>
+
+
+
+
+
+
+                    <div className="bg-white border rounded-3xl p-7 shadow-lg">
+
+
+                        <h2 className="text-2xl font-bold text-black mb-6">
+                            Account Details
+                        </h2>
+
+
+
+                        <p className="text-black font-semibold">
+                            User ID
+                        </p>
+
+
+                        <p className="text-black break-all mt-2">
+                            {user.id}
+                        </p>
+
+
+                    </div>
+
+
+
+                </div>
+
+
+
+
+
+                {/* Buttons */}
+
+
+                <div className="flex justify-center gap-5 py-10">
+
+
+                    <Link href="/my-profile/edit">
+
+                        <button
+                            className="
+                            flex items-center gap-2
+                            bg-black
+                            text-white
+                            px-8 py-3
+                            rounded-full
+                            font-bold
+                            hover:bg-blue-700
+                            transition
+                            "
+                        >
+
+                            <FaEdit/>
+
+                            Edit Profile
+
+                        </button>
+
+
+                    </Link>
+
+
+
+
+
+                    <button
+
+                        onClick={deleteAccount}
+
+                        className="
+                        flex items-center gap-2
+                        bg-red-600
+                        text-white
+                        px-8 py-3
+                        rounded-full
+                        font-bold
+                        hover:bg-red-700
+                        transition
+                        "
+
+                    >
+
+                        <FaTrash/>
+
+                        {deleting ? "Deleting..." : "Delete Account"}
+
+                    </button>
+
+
+                </div>
+
+
+
+
+            </div>
+
 
         </div>
-      )}
 
-    </section>
-  );
-};
+    );
 
-export default MyProfilePage;
+}
