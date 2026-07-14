@@ -29,7 +29,7 @@ const MyBookings = async () => {
 
     return (
         <div>
-            <div className="max-w-5xl mx-auto px-6 py-6 flex items-center justify-between bg-white/60 backdrop-blur-md rounded-2xl shadow-lg border border-gray-100">
+            <div className="max-w-5xl mx-auto mt-8 px-6 py-6 flex items-center justify-between bg-white/60 backdrop-blur-md rounded-2xl shadow-lg border border-gray-100">
 
                 <h1 className="text-3xl font-bold text-gray-900">
                     My Bookings

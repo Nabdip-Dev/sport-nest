@@ -1,7 +1,5 @@
 "use client";
 
-import { motion, useScroll, useTransform } from "framer-motion";
-import { useRef } from "react";
 import {
   Lock,
   Rocket,
@@ -45,85 +43,52 @@ const FEATURES = [
 ];
 
 export default function WhyChoose() {
-  const ref = useRef(null);
-
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start end", "end start"],
-  });
-
-  const bg1 = useTransform(scrollYProgress, [0, 1], [0, -200]);
-  const bg2 = useTransform(scrollYProgress, [0, 1], [0, 200]);
-
   return (
-    <section
-      ref={ref}
-      className="relative py-48 overflow-hidden bg-white"
-    >
-
+    <section className="relative py-48 overflow-hidden bg-white">
       {/* FLOATING BACKGROUND LAYERS */}
-      <motion.div style={{ y: bg1 }} className="absolute inset-0">
+      <div className="absolute inset-0">
         <div className="absolute top-[-350px] left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-sky-200 blur-[240px] opacity-40 rounded-full" />
-      </motion.div>
+      </div>
 
-      <motion.div style={{ y: bg2 }} className="absolute inset-0">
+      <div className="absolute inset-0">
         <div className="absolute bottom-[-350px] right-[-200px] w-[900px] h-[900px] bg-purple-200 blur-[240px] opacity-30 rounded-full" />
-      </motion.div>
+      </div>
 
       {/* PARTICLE DOT GRID */}
       <div className="absolute inset-0 bg-[radial-gradient(circle,rgba(0,0,0,0.04)_1px,transparent_1px)] bg-[length:22px_22px]" />
 
       <div className="relative max-w-6xl mx-auto px-6">
-
         {/* TITLE */}
-        <motion.div
-          initial={{ opacity: 0, y: 80 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          className="text-center mb-32"
-        >
+        <div className="text-center mb-16">
           <h2 className="text-6xl font-semibold tracking-tight text-slate-900">
             Why{" "}
-            <span className="bg-gradient-to-r from-sky-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-sky-400 via-[#2b84ff] to-[rgb(0,17,95)] bg-clip-text text-transparent">
               Choose
             </span>{" "}
             SportNest
           </h2>
 
           <p className="mt-6 text-lg text-slate-500 max-w-2xl mx-auto">
-            A next-generation cinematic booking experience with immersive interaction design.
+            A next-generation cinematic booking experience with immersive
+            interaction design.
           </p>
-        </motion.div>
+        </div>
 
         {/* GRID */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-14">
-
           {FEATURES.map((item, i) => {
             const Icon = item.icon;
 
             return (
-              <motion.div
+              <div
                 key={i}
-                initial={{ opacity: 0, y: 100 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{
-                  delay: i * 0.15,
-                  duration: 0.7,
-                }}
-                whileHover={{
-                  y: -10,
-                  scale: 1.03,
-                }}
-                className="group relative transition-all duration-300"
+                className="group relative transform transition-all duration-200 ease-[cubic-bezier(0.22,1,0.36,1)] hover:-translate-y-3 hover:scale-[1.03]"
               >
-
                 {/* OUTER GLOW */}
                 <div className="absolute -inset-4 rounded-3xl opacity-0 group-hover:opacity-100 blur-3xl transition duration-500 bg-gradient-to-r from-sky-300 via-purple-300 to-pink-300" />
 
                 {/* CARD */}
                 <div className="relative p-9 rounded-3xl bg-white border border-slate-100 shadow-2xl overflow-hidden text-center">
-
                   {/* gradient base */}
                   <div
                     className={`absolute inset-0 bg-gradient-to-br ${item.color} opacity-20`}
@@ -153,18 +118,11 @@ export default function WhyChoose() {
                   </p>
 
                   {/* underline */}
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileInView={{ width: "100%" }}
-                    transition={{ duration: 1 }}
-                    className="relative z-10 mt-8 h-[2px] bg-gradient-to-r from-sky-400 via-purple-400 to-pink-400"
-                  />
-
+                  <div className="relative z-10 mt-8 h-[2px] w-full bg-gradient-to-r from-sky-400 via-purple-400 to-pink-400" />
                 </div>
-              </motion.div>
+              </div>
             );
           })}
-
         </div>
       </div>
     </section>

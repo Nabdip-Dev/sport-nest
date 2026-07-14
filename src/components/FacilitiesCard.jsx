@@ -18,7 +18,7 @@ const FacilitiesCard = ({ facility }) => {
                             <img
                                 src={image}
                                 alt={name}
-                                className="w-full h-56 object-cover rounded-[22px] group-hover:scale-105 transition duration-700"
+                                className="w-full h-40 object-cover rounded-[22px] group-hover:scale-105 transition duration-700"
                             />
 
                         ) : (
@@ -42,9 +42,9 @@ const FacilitiesCard = ({ facility }) => {
                     {/* PRICE */}
                     <div className="absolute bottom-6 right-6 bg-[#2563eb] text-white px-4 py-2 rounded-xl shadow-lg">
 
-                        <h3 className="font-black text-lg">
+                        <h5 className="font-black text-[10px]">
                             ₹{price}
-                        </h3>
+                        </h5>
 
                         <p className="text-[10px] opacity-90">
                             per hour
@@ -57,30 +57,30 @@ const FacilitiesCard = ({ facility }) => {
                 {/* CONTENT */}
                 <div className="px-5 pb-5">
 
-                    <h2 className="text-2xl font-black text-slate-800 group-hover:text-[#2563eb] transition">
+                    <h2 className="text-xl font-black text-slate-800 group-hover:text-[#2563eb] transition">
                         {name}
                     </h2>
 
                     {/* LOCATION */}
-                    <p className="text-slate-500 mt-2 text-sm flex items-center gap-1">
+                    <p className="text-slate-500 mt-1 text-sm flex items-center gap-1">
                         📍 {location}
                     </p>
 
                     {/* DESCRIPTION */}
-                    <p className="text-slate-500 mt-3 text-sm leading-relaxed line-clamp-2">
+                    <p className="text-slate-500 mt-1 text-sm leading-relaxed line-clamp-2">
                         {description}
                     </p>
 
                     {/* TIME */}
-                    <div className="flex items-center justify-between mt-5 bg-blue-50 rounded-xl px-4 py-3">
+                    <div className="flex items-center justify-between mt-3 bg-blue-50 rounded-xl px-4 py-2">
 
-                        <div>
+                        <div className="flex gap-1">
 
                             <p className="text-[10px] text-slate-400 font-semibold">
-                                OPEN
+                                OPEN :
                             </p>
 
-                            <h4 className="font-bold text-sm text-slate-700">
+                            <h4 className="font-bold text-[10px] text-slate-700">
                                 {open}
                             </h4>
 
@@ -88,13 +88,13 @@ const FacilitiesCard = ({ facility }) => {
 
                         <div className="w-6 h-[2px] bg-blue-200"></div>
 
-                        <div className="text-right">
+                        <div className="flex gap-1 text-right">
 
                             <p className="text-[10px] text-slate-400 font-semibold">
-                                CLOSE
+                                CLOSE :
                             </p>
 
-                            <h4 className="font-bold text-sm text-slate-700">
+                            <h4 className="font-bold text-[10px] text-slate-700">
                                 {close}
                             </h4>
 
@@ -105,7 +105,7 @@ const FacilitiesCard = ({ facility }) => {
                     {/* BUTTON */}
                     <Link href={`/facilities/${_id}`}>
 
-                        <button className="w-full mt-5 bg-gradient-to-r from-[#2563eb] to-blue-500 hover:from-blue-600 hover:to-blue-700 text-white py-3 rounded-xl font-bold text-sm transition-all duration-300 hover:scale-[1.02]">
+                        <button className="w-full mt-4 bg-gradient-to-r from-[#2563eb] to-blue-500 hover:from-blue-600 hover:to-blue-700 text-white py-2 rounded-xl font-bold text-[10px] transition-all duration-300 hover:scale-[1.02]">
                             Book Now
                         </button>
 
