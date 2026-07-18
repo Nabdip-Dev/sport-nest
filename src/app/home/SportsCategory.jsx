@@ -117,7 +117,7 @@ export default function SportsCategory() {
   return (
     <section
       ref={ref}
-      className="relative py-28 overflow-hidden bg-white"
+      className="relative py-16 overflow-hidden bg-white"
     >
       {/* PREMIUM BACKGROUND GLOWS */}
       <div className="absolute inset-0 pointer-events-none">
@@ -128,7 +128,7 @@ export default function SportsCategory() {
 
       {/* TITLE */}
       <div className="text-center mb-16 px-6 relative z-10">
-        <h2 className="text-5xl md:text-6xl font-bold text-slate-900">
+        <h2 className="text-3xl md:text-5xl font-bold text-slate-900">
           Explore{" "}
           <span className="bg-gradient-to-r from-sky-500 via-indigo-500 to-pink-500 bg-clip-text text-transparent">
             Sports Booking

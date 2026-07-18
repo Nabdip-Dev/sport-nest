@@ -93,7 +93,7 @@ const MyBookings = async () => {
                                         📍 {item.facilityLocation}
                                     </p>
 
-                                    <div className="flex flex-row justify-between mt-4 border-t border-gray-200 pt-4 space-y-2">
+                                    <div className="flex flex-col md:flex-row justify-between mt-4 border-t border-gray-200 pt-4 space-y-2">
 
                                         <div>
                                             <p className="text-sm text-gray-600">
@@ -112,7 +112,7 @@ const MyBookings = async () => {
                                             </p>
                                         </div>
 
-                                        <div className="flex justify-end items-end">
+                                        <div className="flex justify-center mt-2 md:mt-0 md:justify-end  items-end">
 
                                             {/* ✅ ONLY FIX: item passed correctly */}
                                             <CancelModal item={item} />

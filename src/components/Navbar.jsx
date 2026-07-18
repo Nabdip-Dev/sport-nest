@@ -60,7 +60,7 @@ const Navbar = () => {
 
         <Link
           href="/"
-          className="text-2xl font-extrabold tracking-wide"
+          className="text-[18px] md:text-2xl font-extrabold tracking-wide"
         >
           <span className="text-[#0f172a]">SPORT</span>
           <span className="text-[#2563eb]">NEST</span>

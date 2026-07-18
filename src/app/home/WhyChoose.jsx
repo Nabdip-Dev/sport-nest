@@ -44,7 +44,7 @@ const FEATURES = [
 
 export default function WhyChoose() {
   return (
-    <section className="relative py-48 overflow-hidden bg-white">
+    <section className="relative py-16 overflow-hidden bg-white">
       {/* FLOATING BACKGROUND LAYERS */}
       <div className="absolute inset-0">
         <div className="absolute top-[-350px] left-1/2 -translate-x-1/2 w-[1000px] h-[1000px] bg-sky-200 blur-[240px] opacity-40 rounded-full" />
@@ -60,7 +60,7 @@ export default function WhyChoose() {
       <div className="relative max-w-6xl mx-auto px-6">
         {/* TITLE */}
         <div className="text-center mb-16">
-          <h2 className="text-6xl font-semibold tracking-tight text-slate-900">
+          <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-slate-900">
             Why{" "}
             <span className="bg-gradient-to-r from-sky-400 via-[#2b84ff] to-[rgb(0,17,95)] bg-clip-text text-transparent">
               Choose
@@ -68,14 +68,14 @@ export default function WhyChoose() {
             SportNest
           </h2>
 
-          <p className="mt-6 text-lg text-slate-500 max-w-2xl mx-auto">
+          <p className="mt-6 text-[12px] md:text-lg text-slate-500 max-w-2xl mx-auto">
             A next-generation cinematic booking experience with immersive
             interaction design.
           </p>
         </div>
 
         {/* GRID */}
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-14">
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-14 px-12 md:px-0">
           {FEATURES.map((item, i) => {
             const Icon = item.icon;
 
@@ -108,12 +108,12 @@ export default function WhyChoose() {
                   </div>
 
                   {/* TITLE */}
-                  <h3 className="relative z-10 text-xl font-semibold text-slate-900">
+                  <h3 className="relative line-clamp-1 z-10 text-xl font-semibold text-slate-900">
                     {item.title}
                   </h3>
 
                   {/* DESC */}
-                  <p className="relative z-10 mt-4 text-sm text-slate-500 leading-7">
+                  <p className="relative line-clamp-3 z-10 mt-4 text-sm text-slate-500 leading-7">
                     {item.desc}
                   </p>
 
